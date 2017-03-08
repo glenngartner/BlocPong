@@ -1,43 +1,6 @@
-/**
- * Created by glenn on 2/28/2017.
- */
-define("Paddle", ["require", "exports"], function (require, exports) {
-    "use strict";
-    var Paddle = (function () {
-        function Paddle(context, x, y, width, height, color, stroke, strokeWidth) {
-            if (width === void 0) { width = 20; }
-            if (height === void 0) { height = 100; }
-            if (color === void 0) { color = "#A2DDFF"; }
-            if (stroke === void 0) { stroke = "black"; }
-            if (strokeWidth === void 0) { strokeWidth = 3; }
-            this.context = context;
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-            this.color = color;
-            this.stroke = stroke;
-            this.strokeWidth = strokeWidth;
-            this.drawPaddle(context, x, y, width, height, color, stroke, strokeWidth);
-        }
-        Paddle.prototype.drawPaddle = function (context, x, y, width, height, color, stroke, strokeWidth) {
-            context.beginPath();
-            context.rect(x, y, width, height);
-            context.fillStyle = color;
-            context.fill();
-            context.lineWidth = strokeWidth;
-            context.strokeStyle = stroke;
-            context.stroke();
-        };
-        Paddle.prototype.render = function () {
-            console.log("Paddle is rendering");
-        };
-        return Paddle;
-    }());
-    exports.Paddle = Paddle;
-});
 define("Background", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     /**
      * Created by glenn on 2/28/2017.
      */
@@ -63,6 +26,7 @@ define("Background", ["require", "exports"], function (require, exports) {
  */
 define("Ball", ["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Ball = (function () {
         function Ball(context, x, y, radius, startAngle, endAngle, color, stroke, strokeWidth) {
             if (radius === void 0) { radius = 10; }
@@ -102,8 +66,48 @@ define("Ball", ["require", "exports"], function (require, exports) {
 /**
  * Created by glenn on 2/28/2017.
  */
+define("Paddle", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Paddle = (function () {
+        function Paddle(context, x, y, width, height, color, stroke, strokeWidth) {
+            if (width === void 0) { width = 20; }
+            if (height === void 0) { height = 100; }
+            if (color === void 0) { color = "#A2DDFF"; }
+            if (stroke === void 0) { stroke = "black"; }
+            if (strokeWidth === void 0) { strokeWidth = 3; }
+            this.context = context;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.color = color;
+            this.stroke = stroke;
+            this.strokeWidth = strokeWidth;
+            this.drawPaddle(context, x, y, width, height, color, stroke, strokeWidth);
+        }
+        Paddle.prototype.drawPaddle = function (context, x, y, width, height, color, stroke, strokeWidth) {
+            context.beginPath();
+            context.rect(x, y, width, height);
+            context.fillStyle = color;
+            context.fill();
+            context.lineWidth = strokeWidth;
+            context.strokeStyle = stroke;
+            context.stroke();
+        };
+        Paddle.prototype.render = function () {
+            console.log("Paddle is rendering");
+        };
+        return Paddle;
+    }());
+    exports.Paddle = Paddle;
+});
+/**
+ * Created by glenn on 2/28/2017.
+ */
 define("Pong", ["require", "exports", "Background", "Paddle", "Ball"], function (require, exports, Background_1, Paddle_1, Ball_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
         function Pong(canvas, context) {
             this.canvas = canvas;
@@ -128,15 +132,34 @@ define("Pong", ["require", "exports", "Background", "Paddle", "Ball"], function 
     }());
     exports.Pong = Pong;
 });
-define("main", ["require", "exports", "Pong"], function (require, exports, Pong_1) {
+define("main", ["require", "exports", "three"], function (require, exports, THREE) {
     "use strict";
-    var canvas = document.getElementById('pongCanvas');
-    configureCanvas(canvas);
-    var context = canvas.getContext('2d');
-    var pong = new Pong_1.Pong(canvas, context);
-    function configureCanvas(canvas) {
-        canvas.width = 1200;
-        canvas.height = 800;
-    }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // let canvas = <HTMLCanvasElement>document.getElementById('pongCanvas');
+    // configureCanvas(canvas);
+    // let context = canvas.getContext('2d');
+    // let pong = new Pong(canvas, context);
+    //
+    // function configureCanvas(canvas){
+    //     canvas.width = 1200;
+    //     canvas.height = 800;
+    // }
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    var geometry = new THREE.BoxGeometry(1, 1, 1);
+    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    var cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 5;
+    var render = function () {
+        requestAnimationFrame(render);
+        cube.rotation.x += 0.1;
+        cube.rotation.y += 0.1;
+        renderer.render(scene, camera);
+    };
+    render();
 });
 //# sourceMappingURL=main.js.map
