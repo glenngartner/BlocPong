@@ -1,43 +1,39 @@
-/**
- * Created by glenn on 2/28/2017.
- */
+import * as THREE from "three";
+
+interface dimensions {
+  width: number,
+  height: number,
+  depth: number
+}
+
+interface location {
+  x: number,
+  y: number,
+  z: number
+}
 
 export class Paddle {
 
+    private mesh: THREE.Mesh;
+
     constructor(
-        public context: CanvasRenderingContext2D,
-        public x: number,
-        public y: number,
-        public width: number = 20,
-        public height: number = 100,
-        public color: string = "#A2DDFF",
-        public stroke: string = "black",
-        public strokeWidth: number = 3
-    ) {
-        this.drawPaddle(context, x, y, width, height, color, stroke, strokeWidth);
+        private dimensions: dimensions,
+        private location: location,
+        private scene: THREE.Scene) {
+        this.mesh = this.buildMesh(dimensions);
+        this.setPosition(this.mesh, location);
+        this.scene.add(this.mesh);
     }
 
-    drawPaddle(
-        context: CanvasRenderingContext2D,
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        color: string,
-        stroke: string,
-        strokeWidth: number
-    ) {
-        context.beginPath();
-        context.rect(x, y, width, height);
-        context.fillStyle = color;
-        context.fill();
-        context.lineWidth = strokeWidth;
-        context.strokeStyle = stroke;
-        context.stroke();
+    buildMesh(dims: dimensions): THREE.Mesh {
+        let geo = new THREE.BoxGeometry(dims.width, dims.height, dims.depth);
+        let mat = new THREE.MeshBasicMaterial({color: 0xFF0000});
+        let mesh = new THREE.Mesh(geo, mat);
+        return mesh;
     }
 
-    render(){
-        console.log("Paddle is rendering");
+    setPosition(mesh: THREE.Mesh, location:location) {
+        mesh.position.set(location.x, location.y, location.z);
     }
 
 }
