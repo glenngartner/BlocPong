@@ -13,7 +13,7 @@ export class PongCamera extends THREE.PerspectiveCamera {
     }
 
     setPosition(){
-        this.position.y = -10;
-        this.rotateX(Math.PI/2);
+        this.position.y = 10;
+        this.rotateX(-Math.PI/2);
     }
 }

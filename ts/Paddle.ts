@@ -1,17 +1,5 @@
 import * as THREE from "three";
 
-interface dimensions {
-  width: number,
-  height: number,
-  depth: number
-}
-
-interface location {
-  x: number,
-  y: number,
-  z: number
-}
-
 export class Paddle {
 
     private mesh: THREE.Mesh;
@@ -19,17 +7,25 @@ export class Paddle {
     constructor(
         private dimensions: dimensions,
         private location: location,
+        private color: number,
         private scene: THREE.Scene) {
-        this.mesh = this.buildMesh(dimensions);
+        this.mesh = this.buildMesh(dimensions, color);
         this.setPosition(this.mesh, location);
         this.scene.add(this.mesh);
     }
 
-    buildMesh(dims: dimensions): THREE.Mesh {
+    buildMesh(dims: dimensions, color: number): THREE.Mesh {
         let geo = new THREE.BoxGeometry(dims.width, dims.height, dims.depth);
-        let mat = new THREE.MeshBasicMaterial({color: 0xFF0000});
+        let mat = this.buildMaterial(color);
         let mesh = new THREE.Mesh(geo, mat);
         return mesh;
+    }
+
+    buildMaterial(color:number):THREE.MeshStandardMaterial {
+      let mat = new THREE.MeshStandardMaterial();
+      mat.color = new THREE.Color(color);
+      mat.roughness = 0.25; 
+      return mat;
     }
 
     setPosition(mesh: THREE.Mesh, location:location) {

@@ -77,8 +77,8 @@ define("Camera", ["require", "exports", "three"], function (require, exports, TH
             return _this;
         }
         PongCamera.prototype.setPosition = function () {
-            this.position.y = -10;
-            this.rotateX(Math.PI / 2);
+            this.position.y = 10;
+            this.rotateX(-Math.PI / 2);
         };
         return PongCamera;
     }(THREE.PerspectiveCamera));
@@ -88,19 +88,26 @@ define("Paddle", ["require", "exports", "three"], function (require, exports, TH
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Paddle = (function () {
-        function Paddle(dimensions, location, scene) {
+        function Paddle(dimensions, location, color, scene) {
             this.dimensions = dimensions;
             this.location = location;
+            this.color = color;
             this.scene = scene;
-            this.mesh = this.buildMesh(dimensions);
+            this.mesh = this.buildMesh(dimensions, color);
             this.setPosition(this.mesh, location);
             this.scene.add(this.mesh);
         }
-        Paddle.prototype.buildMesh = function (dims) {
+        Paddle.prototype.buildMesh = function (dims, color) {
             var geo = new THREE.BoxGeometry(dims.width, dims.height, dims.depth);
-            var mat = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+            var mat = this.buildMaterial(color);
             var mesh = new THREE.Mesh(geo, mat);
             return mesh;
+        };
+        Paddle.prototype.buildMaterial = function (color) {
+            var mat = new THREE.MeshStandardMaterial();
+            mat.color = new THREE.Color(color);
+            mat.roughness = 0.25;
+            return mat;
         };
         Paddle.prototype.setPosition = function (mesh, location) {
             mesh.position.set(location.x, location.y, location.z);
@@ -131,7 +138,33 @@ define("PongRender", ["require", "exports", "three"], function (require, exports
     }(THREE.WebGLRenderer));
     exports.PongRender = PongRender;
 });
-define("Pong", ["require", "exports", "three", "Paddle", "Camera", "PongRender"], function (require, exports, THREE, Paddle_1, Camera_1, PongRender_1) {
+define("PongLight", ["require", "exports", "three"], function (require, exports, THREE) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var PongLight = (function (_super) {
+        __extends(PongLight, _super);
+        function PongLight(col, scene, loc, bright) {
+            if (loc === void 0) { loc = { x: 0, y: 0, z: 0 }; }
+            if (bright === void 0) { bright = 1; }
+            var _this = _super.call(this) || this;
+            _this.col = col;
+            _this.scene = scene;
+            _this.loc = loc;
+            _this.bright = bright;
+            _this.color = new THREE.Color(col);
+            _this.intensity = bright;
+            _this.positionLight(loc);
+            _this.scene.add(_this);
+            return _this;
+        }
+        PongLight.prototype.positionLight = function (loc) {
+            this.position.set(loc.x, loc.y, loc.z);
+        };
+        return PongLight;
+    }(THREE.PointLight));
+    exports.PongLight = PongLight;
+});
+define("Pong", ["require", "exports", "three", "Paddle", "Camera", "PongRender", "PongLight"], function (require, exports, THREE, Paddle_1, Camera_1, PongRender_1, PongLight_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
@@ -139,9 +172,10 @@ define("Pong", ["require", "exports", "three", "Paddle", "Camera", "PongRender"]
             var scene = new THREE.Scene();
             var camera = new Camera_1.PongCamera();
             var renderer = new PongRender_1.PongRender(scene, camera);
+            var centerLight = new PongLight_1.PongLight(0xFFFFFF, scene, { x: 0, y: 10, z: 0 }, 2);
             var paddleDims = { width: 1, height: 0.5, depth: 4 };
-            var compPaddle = new Paddle_1.Paddle(paddleDims, { x: -15, y: 0, z: 0 }, scene);
-            var playerPaddle = new Paddle_1.Paddle(paddleDims, { x: 15, y: 0, z: 0 }, scene);
+            var compPaddle = new Paddle_1.Paddle(paddleDims, { x: -14, y: 0, z: 0 }, 0xFF0000, scene);
+            var playerPaddle = new Paddle_1.Paddle(paddleDims, { x: 14, y: 0, z: 0 }, 0xFFFF00, scene);
         }
         return Pong;
     }());
