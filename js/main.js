@@ -1,16 +1,10 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define("Background", ["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var Background = (function () {
         function Background(canvas, context, color) {
             if (color === void 0) { color = "#D0BAAA"; }
@@ -29,7 +23,6 @@ define("Background", ["require", "exports"], function (require, exports) {
 });
 define("Ball", ["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var Ball = (function () {
         function Ball(context, x, y, radius, startAngle, endAngle, color, stroke, strokeWidth) {
             if (radius === void 0) { radius = 10; }
@@ -68,13 +61,11 @@ define("Ball", ["require", "exports"], function (require, exports) {
 });
 define("Camera", ["require", "exports", "three"], function (require, exports, THREE) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var PongCamera = (function (_super) {
         __extends(PongCamera, _super);
         function PongCamera() {
-            var _this = _super.call(this, 75, window.innerWidth / window.innerHeight, 0.1, 1000) || this;
-            _this.setPosition();
-            return _this;
+            _super.call(this, 75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.setPosition();
         }
         PongCamera.prototype.setPosition = function () {
             this.position.y = 10;
@@ -86,7 +77,6 @@ define("Camera", ["require", "exports", "three"], function (require, exports, TH
 });
 define("Paddle", ["require", "exports", "three"], function (require, exports, THREE) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var Paddle = (function () {
         function Paddle(dimensions, location, color, scene) {
             this.dimensions = dimensions;
@@ -118,21 +108,20 @@ define("Paddle", ["require", "exports", "three"], function (require, exports, TH
 });
 define("PongRender", ["require", "exports", "three"], function (require, exports, THREE) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var PongRender = (function (_super) {
         __extends(PongRender, _super);
         function PongRender(scene, camera) {
-            var _this = _super.call(this) || this;
-            _this.scene = scene;
-            _this.camera = camera;
-            _this.animate = function () {
+            var _this = this;
+            _super.call(this);
+            this.scene = scene;
+            this.camera = camera;
+            this.animate = function () {
                 requestAnimationFrame(_this.animate);
                 _this.render(_this.scene, _this.camera);
             };
-            _this.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(_this.domElement);
-            _this.animate();
-            return _this;
+            this.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(this.domElement);
+            this.animate();
         }
         return PongRender;
     }(THREE.WebGLRenderer));
@@ -140,22 +129,20 @@ define("PongRender", ["require", "exports", "three"], function (require, exports
 });
 define("PongLight", ["require", "exports", "three"], function (require, exports, THREE) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var PongLight = (function (_super) {
         __extends(PongLight, _super);
         function PongLight(col, scene, loc, bright) {
             if (loc === void 0) { loc = { x: 0, y: 0, z: 0 }; }
             if (bright === void 0) { bright = 1; }
-            var _this = _super.call(this) || this;
-            _this.col = col;
-            _this.scene = scene;
-            _this.loc = loc;
-            _this.bright = bright;
-            _this.color = new THREE.Color(col);
-            _this.intensity = bright;
-            _this.positionLight(loc);
-            _this.scene.add(_this);
-            return _this;
+            _super.call(this);
+            this.col = col;
+            this.scene = scene;
+            this.loc = loc;
+            this.bright = bright;
+            this.color = new THREE.Color(col);
+            this.intensity = bright;
+            this.positionLight(loc);
+            this.scene.add(this);
         }
         PongLight.prototype.positionLight = function (loc) {
             this.position.set(loc.x, loc.y, loc.z);
@@ -166,7 +153,6 @@ define("PongLight", ["require", "exports", "three"], function (require, exports,
 });
 define("Pong", ["require", "exports", "three", "Paddle", "Camera", "PongRender", "PongLight"], function (require, exports, THREE, Paddle_1, Camera_1, PongRender_1, PongLight_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
         function Pong() {
             var scene = new THREE.Scene();
@@ -183,12 +169,10 @@ define("Pong", ["require", "exports", "three", "Paddle", "Camera", "PongRender",
 });
 define("main", ["require", "exports", "Pong"], function (require, exports, Pong_1) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var pong = new Pong_1.Pong();
 });
 define("Paddle_old", ["require", "exports"], function (require, exports) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     var Paddle = (function () {
         function Paddle(context, x, y, width, height, color, stroke, strokeWidth) {
             if (width === void 0) { width = 20; }

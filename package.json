@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/es6-promise": "0.0.32",
     "@types/three": "^0.84.0",
     "requirejs": "^2.3.3",
     "three": "^0.84.0"
