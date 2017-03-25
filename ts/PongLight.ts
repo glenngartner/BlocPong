@@ -1,11 +1,10 @@
-import * as THREE from "three";
 
 export class PongLight extends THREE.PointLight {
 
     constructor(
         private col: number,
         private scene: THREE.Scene,
-        private loc: location = { x: 0, y: 0, z: 0 },
+        private loc: vector3 = { x: 0, y: 0, z: 0 },
         private bright: number = 1
     ) {
         super();
@@ -15,7 +14,7 @@ export class PongLight extends THREE.PointLight {
         this.scene.add(this);
     }
 
-    positionLight(loc: location) {
+    positionLight(loc: vector3) {
         this.position.set(loc.x, loc.y, loc.z);
     }
 }

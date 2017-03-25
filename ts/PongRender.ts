@@ -2,8 +2,6 @@
  * Created by glenngartner on 3/14/17.
  */
 
-import * as THREE from "three";
-
 export class PongRender extends THREE.WebGLRenderer{
 
     constructor(

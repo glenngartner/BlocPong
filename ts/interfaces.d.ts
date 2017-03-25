@@ -1,11 +1,5 @@
 
-interface dimensions {
-  width: number,
-  height: number,
-  depth: number
-}
-
-interface location {
+interface vector3 {
   x: number,
   y: number,
   z: number

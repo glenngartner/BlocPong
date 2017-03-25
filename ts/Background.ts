@@ -16,4 +16,10 @@ export class Background {
         context.fillStyle = color;
         context.fillRect(0, 0, canvas.width, canvas.height);
     }
+
+    createSphereMap(radius: number) {
+            let sphere = new THREE.SphereGeometry(radius);
+            let  mat = new THREE.MeshStandardMaterial();
+            let sky = new THREE.Mesh(sphere, mat);
+    }
 }
