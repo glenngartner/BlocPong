@@ -4,22 +4,30 @@
 export class Background {
 
     constructor(
-        public canvas: HTMLCanvasElement,
-        public context:CanvasRenderingContext2D,
-        public color: string = "#D0BAAA"
+        private scene: THREE.Scene,
+        private radius: number = 100
     ){
-        this.drawBackground(canvas, context, color);
+        let texture = this.loadTexture();
+        this.createSphereMap(radius, texture);
     }
 
-    drawBackground(canvas: HTMLCanvasElement, context:CanvasRenderingContext2D, color:string){
-        // draw background fill color
-        context.fillStyle = color;
-        context.fillRect(0, 0, canvas.width, canvas.height);
+    loadTexture(): THREE.Texture{
+            let texture = new THREE.TextureLoader().load("assets/textures/OceanWithClouds.png");
+            return texture;
     }
 
-    createSphereMap(radius: number) {
-            let sphere = new THREE.SphereGeometry(radius);
-            let  mat = new THREE.MeshStandardMaterial();
-            let sky = new THREE.Mesh(sphere, mat);
+    createSphereMap(radius: number, texture: THREE.Texture) {
+            let sphere = new THREE.SphereBufferGeometry(radius, 32, 16);
+            let mat = new THREE.MeshBasicMaterial(
+                {
+                    // color: 0x0000FF,
+                    map: texture,
+                    side: THREE.DoubleSide,
+                    shading: THREE.SmoothShading
+                }
+            );
+            let skyBox = new THREE.Mesh(sphere, mat);
+            // skyBox.scale.x = -1;
+            this.scene.add(skyBox);
     }
 }

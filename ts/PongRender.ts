@@ -8,7 +8,9 @@ export class PongRender extends THREE.WebGLRenderer{
         public scene: THREE.Scene,
         public camera: THREE.Camera
     ){
-        super();
+        super({
+            antialias: true
+        });
         this.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.domElement);
         this.animate();

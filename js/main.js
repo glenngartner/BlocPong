@@ -12,21 +12,26 @@ define("Background", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Background = (function () {
-        function Background(canvas, context, color) {
-            if (color === void 0) { color = "#D0BAAA"; }
-            this.canvas = canvas;
-            this.context = context;
-            this.color = color;
-            this.drawBackground(canvas, context, color);
+        function Background(scene, radius) {
+            if (radius === void 0) { radius = 100; }
+            this.scene = scene;
+            this.radius = radius;
+            var texture = this.loadTexture();
+            this.createSphereMap(radius, texture);
         }
-        Background.prototype.drawBackground = function (canvas, context, color) {
-            context.fillStyle = color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
+        Background.prototype.loadTexture = function () {
+            var texture = new THREE.TextureLoader().load("assets/textures/OceanWithClouds.png");
+            return texture;
         };
-        Background.prototype.createSphereMap = function (radius) {
-            var sphere = new THREE.SphereGeometry(radius);
-            var mat = new THREE.MeshStandardMaterial();
-            var sky = new THREE.Mesh(sphere, mat);
+        Background.prototype.createSphereMap = function (radius, texture) {
+            var sphere = new THREE.SphereBufferGeometry(radius, 32, 16);
+            var mat = new THREE.MeshBasicMaterial({
+                map: texture,
+                side: THREE.DoubleSide,
+                shading: THREE.SmoothShading
+            });
+            var skyBox = new THREE.Mesh(sphere, mat);
+            this.scene.add(skyBox);
         };
         return Background;
     }());
@@ -135,7 +140,9 @@ define("PongRender", ["require", "exports"], function (require, exports) {
     var PongRender = (function (_super) {
         __extends(PongRender, _super);
         function PongRender(scene, camera) {
-            var _this = _super.call(this) || this;
+            var _this = _super.call(this, {
+                antialias: true
+            }) || this;
             _this.scene = scene;
             _this.camera = camera;
             _this.animate = function () {
@@ -177,7 +184,7 @@ define("PongLight", ["require", "exports"], function (require, exports) {
     }(THREE.PointLight));
     exports.PongLight = PongLight;
 });
-define("Pong", ["require", "exports", "Paddle", "Camera", "PongRender", "PongLight"], function (require, exports, Paddle_1, Camera_1, PongRender_1, PongLight_1) {
+define("Pong", ["require", "exports", "Paddle", "Camera", "PongRender", "PongLight", "Background"], function (require, exports, Paddle_1, Camera_1, PongRender_1, PongLight_1, Background_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
@@ -185,10 +192,29 @@ define("Pong", ["require", "exports", "Paddle", "Camera", "PongRender", "PongLig
             var scene = new THREE.Scene();
             var camera = new Camera_1.PongCamera({ x: 0, y: 30, z: 0 }, { x: -Math.PI / 2, y: 0, z: 0 });
             var renderer = new PongRender_1.PongRender(scene, camera);
+            var background = new Background_1.Background(scene);
             var centerLight = new PongLight_1.PongLight(0xFFFFFF, scene, { x: 0, y: 10, z: 0 }, 2);
             var paddleDims = { x: 1, y: 0.5, z: 4 };
             var compPaddle = new Paddle_1.Paddle(paddleDims, { x: -14, y: 0, z: 0 }, 0xFF0000, scene);
             var playerPaddle = new Paddle_1.Paddle(paddleDims, { x: 14, y: 0, z: 0 }, 0xFFFF00, scene);
+            var cubeCamera = new THREE.CubeCamera(.1, 2000, 256);
+            cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+            cubeCamera.updateCubeMap(renderer, scene);
+            scene.add(cubeCamera);
+            var sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 32, 16), new THREE.MeshStandardMaterial({
+                roughness: .25,
+                metalness: 1,
+                shading: THREE.SmoothShading,
+                envMap: cubeCamera.renderTarget.texture
+            }));
+            var board = new THREE.Mesh(new THREE.PlaneBufferGeometry(50, 25), new THREE.MeshStandardMaterial({
+                roughness: .25,
+                metalness: 1,
+                envMap: cubeCamera.renderTarget.texture
+            }));
+            board.rotateX(-Math.PI / 2);
+            board.position.setY(-.15);
+            scene.add(board);
         }
         return Pong;
     }());
