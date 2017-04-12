@@ -12,8 +12,8 @@ define("core/renderer_config", ["require", "exports"], function (require, export
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.graphicsLibs = {
-        three: true,
-        babylon: false
+        three: false,
+        babylon: true
     };
 });
 define("babylon/Pong", ["require", "exports"], function (require, exports) {
@@ -133,7 +133,8 @@ define("three/PongRender", ["require", "exports"], function (require, exports) {
         __extends(PongRender, _super);
         function PongRender(scene, camera) {
             var _this = _super.call(this, {
-                antialias: true
+                antialias: true,
+                canvas: document.getElementById('renderCanvas')
             }) || this;
             _this.scene = scene;
             _this.camera = camera;

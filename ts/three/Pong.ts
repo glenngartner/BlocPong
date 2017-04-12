@@ -14,6 +14,8 @@ export class Pong {
 
     constructor() {
 
+        // remove the babylonjs required canvas element (three adds its own)
+
         // basic scene setup (scene, camera, renderer, and light
         let scene = new THREE.Scene();
         let camera = new PongCamera({x:0, y:30, z:0}, {x:-Math.PI/2, y:0, z:0});

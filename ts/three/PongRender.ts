@@ -9,7 +9,8 @@ export class PongRender extends THREE.WebGLRenderer{
         public camera: THREE.Camera
     ){
         super({
-            antialias: true
+            antialias: true,
+            canvas: <HTMLCanvasElement>document.getElementById('renderCanvas')
         });
         this.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.domElement);
