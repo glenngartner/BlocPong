@@ -1,5 +1,7 @@
 
 export let graphicsLibs: rendererConfig = {
-  three: false,
-  babylon: true
+  three: true,
+  babylon: false
+  // three: false,
+  // babylon: true
 }

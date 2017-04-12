@@ -24,6 +24,7 @@ export class Pong {
     createScene(): void {
         // create a basic BJS Scene object
         this._scene = new BABYLON.Scene(this._engine);
+        this._scene.clearColor = BABYLON.Color4.FromHexString("#8bfff8FF");
 
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
         this._camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 20, new BABYLON.Vector3(0, 0, 0), this._scene);

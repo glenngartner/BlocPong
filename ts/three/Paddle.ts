@@ -1,34 +1,31 @@
-
 export class Paddle {
 
     private mesh: THREE.Mesh;
 
-    constructor(
-        private dims: vector3,
-        private location: vector3,
-        private color: number,
-        private scene: THREE.Scene) {
-        this.mesh = this.buildMesh(dims, color);
-        this.setPosition(this.mesh, location);
-        this.scene.add(this.mesh);
+    constructor(private actorArray: Array<Actor>,
+                private scene: THREE.Scene) {
+        this.buildMesh(actorArray);
     }
 
-    buildMesh(dims: vector3, color: number): THREE.Mesh {
-        let geo = new THREE.BoxGeometry(dims.x, dims.y, dims.z);
-        let mat = this.buildMaterial(color);
-        let mesh = new THREE.Mesh(geo, mat);
-        return mesh;
+    buildMesh(actors: Array<Actor>) {
+        for (let actor of actors) {
+            let geo = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
+            let mat = this.buildMaterial(actor.color);
+            let mesh = new THREE.Mesh(geo, mat);
+            this.setPosition(mesh, actor.location);
+            this.scene.add(mesh);
+        }
     }
 
-    buildMaterial(color:number):THREE.MeshStandardMaterial {
-      let mat = new THREE.MeshStandardMaterial();
-      mat.color = new THREE.Color(color);
-      mat.roughness = 0.25;
-      return mat;
+    buildMaterial(color: string): THREE.MeshStandardMaterial {
+        let mat = new THREE.MeshStandardMaterial();
+        mat.color = new THREE.Color(color);
+        mat.roughness = 0.25;
+        return mat;
     }
 
-    setPosition(mesh: THREE.Mesh, loc:vector3) {
-        mesh.position.set(loc.x, loc.y, loc.z);
+    setPosition(mesh: THREE.Mesh, loc: vector3) {
+        mesh.position.set(loc.z, loc.y, loc.x);
     }
 
 }

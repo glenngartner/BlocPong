@@ -12,8 +12,8 @@ define("core/renderer_config", ["require", "exports"], function (require, export
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.graphicsLibs = {
-        three: false,
-        babylon: true
+        three: true,
+        babylon: false
     };
 });
 define("babylon/Pong", ["require", "exports"], function (require, exports) {
@@ -32,6 +32,7 @@ define("babylon/Pong", ["require", "exports"], function (require, exports) {
         };
         Pong.prototype.createScene = function () {
             this._scene = new BABYLON.Scene(this._engine);
+            this._scene.clearColor = BABYLON.Color4.FromHexString("#8bfff8FF");
             this._camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 20, new BABYLON.Vector3(0, 0, 0), this._scene);
             this._camera.setTarget(BABYLON.Vector3.Zero());
             this._camera.attachControl(this._canvas, false);
@@ -74,20 +75,20 @@ define("three/Paddle", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Paddle = (function () {
-        function Paddle(dims, location, color, scene) {
-            this.dims = dims;
-            this.location = location;
-            this.color = color;
+        function Paddle(actorArray, scene) {
+            this.actorArray = actorArray;
             this.scene = scene;
-            this.mesh = this.buildMesh(dims, color);
-            this.setPosition(this.mesh, location);
-            this.scene.add(this.mesh);
+            this.buildMesh(actorArray);
         }
-        Paddle.prototype.buildMesh = function (dims, color) {
-            var geo = new THREE.BoxGeometry(dims.x, dims.y, dims.z);
-            var mat = this.buildMaterial(color);
-            var mesh = new THREE.Mesh(geo, mat);
-            return mesh;
+        Paddle.prototype.buildMesh = function (actors) {
+            for (var _i = 0, actors_2 = actors; _i < actors_2.length; _i++) {
+                var actor = actors_2[_i];
+                var geo = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
+                var mat = this.buildMaterial(actor.color);
+                var mesh = new THREE.Mesh(geo, mat);
+                this.setPosition(mesh, actor.location);
+                this.scene.add(mesh);
+            }
         };
         Paddle.prototype.buildMaterial = function (color) {
             var mat = new THREE.MeshStandardMaterial();
@@ -96,7 +97,7 @@ define("three/Paddle", ["require", "exports"], function (require, exports) {
             return mat;
         };
         Paddle.prototype.setPosition = function (mesh, loc) {
-            mesh.position.set(loc.x, loc.y, loc.z);
+            mesh.position.set(loc.z, loc.y, loc.x);
         };
         return Paddle;
     }());
@@ -108,8 +109,8 @@ define("three/Camera", ["require", "exports"], function (require, exports) {
     var PongCamera = (function (_super) {
         __extends(PongCamera, _super);
         function PongCamera(loc, rot) {
-            if (loc === void 0) { loc = { x: 0, y: 10, z: 0 }; }
-            if (rot === void 0) { rot = { x: -Math.PI / 2, y: 0, z: 0 }; }
+            if (loc === void 0) { loc = { x: 0, y: 40, z: 0 }; }
+            if (rot === void 0) { rot = { x: -Math.PI / 2, y: -Math.PI / 2, z: -Math.PI / 2 }; }
             var _this = _super.call(this, 35, window.innerWidth / window.innerHeight, 0.1, 1000) || this;
             _this.loc = loc;
             _this.rot = rot;
@@ -119,7 +120,6 @@ define("three/Camera", ["require", "exports"], function (require, exports) {
         }
         PongCamera.prototype.setPosition = function (loc, rot) {
             this.position.set(loc.x, loc.y, loc.z);
-            this.rotateX(rot.x);
         };
         PongCamera.prototype.setControls = function () {
             var controls = new THREE.OrbitControls(this);
@@ -145,6 +145,7 @@ define("three/PongRender", ["require", "exports"], function (require, exports) {
                 _this.render(_this.scene, _this.camera);
             };
             _this.setSize(window.innerWidth, window.innerHeight);
+            _this.setClearColor(0x8bfff8, 1);
             document.body.appendChild(_this.domElement);
             _this.animate();
             return _this;
@@ -208,7 +209,7 @@ define("three/Background", ["require", "exports"], function (require, exports) {
     }());
     exports.Background = Background;
 });
-define("three/Pong", ["require", "exports", "three/Paddle", "three/Camera", "three/PongRender", "three/PongLight", "three/Background"], function (require, exports, Paddle_1, Camera_1, PongRender_1, PongLight_1, Background_1) {
+define("three/Pong", ["require", "exports", "three/Paddle", "three/Camera", "three/PongRender"], function (require, exports, Paddle_1, Camera_1, PongRender_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
@@ -216,23 +217,17 @@ define("three/Pong", ["require", "exports", "three/Paddle", "three/Camera", "thr
             var scene = new THREE.Scene();
             var camera = new Camera_1.PongCamera({ x: 0, y: 30, z: 0 }, { x: -Math.PI / 2, y: 0, z: 0 });
             var renderer = new PongRender_1.PongRender(scene, camera);
-            var background = new Background_1.Background(scene);
-            var centerLight = new PongLight_1.PongLight(0xFFFFFF, scene, { x: 0, y: 10, z: 0 }, 2);
+            var centerLight = new THREE.HemisphereLight("white", "brown", 2);
+            scene.add(centerLight);
             var paddleDims = { x: 1, y: 0.5, z: 4 };
-            var compPaddle = new Paddle_1.Paddle(paddleDims, { x: -14, y: 0, z: 0 }, 0xFF0000, scene);
-            var playerPaddle = new Paddle_1.Paddle(paddleDims, { x: 14, y: 0, z: 0 }, 0xFFFF00, scene);
-            var sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(1, 32, 16), new THREE.MeshStandardMaterial({
-                roughness: .25,
-                metalness: 1,
-                shading: THREE.SmoothShading
-            }));
-            scene.add(sphere);
+            var compPaddle = new Paddle_1.Paddle(actor, scene);
             var board = new THREE.Mesh(new THREE.PlaneBufferGeometry(50, 25), new THREE.MeshStandardMaterial({
-                roughness: .25,
-                metalness: 1
+                color: "white",
+                roughness: 1
             }));
             board.rotateX(-Math.PI / 2);
             board.position.setY(-.15);
+            scene.add(board);
         }
         return Pong;
     }());
@@ -282,6 +277,33 @@ define("core/Actor", ["require", "exports"], function (require, exports) {
     }());
     exports.Actor = Actor;
 });
+define("core/start", ["require", "exports", "babylon/Pong", "three/Pong", "core/Actor"], function (require, exports, tsPong, threePong, Actor_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Start = (function () {
+        function Start(config) {
+            var paddle1 = new Actor_1.Actor({ color: "#FF0000", location: { x: 0, y: 0.5, z: 12 }, scale: { x: 6, y: 1, z: 1 } });
+            var paddle2 = new Actor_1.Actor({ color: "#00FF00", location: { x: 0, y: 0.5, z: -12 }, scale: { x: 6, y: 1, z: 1 } });
+            this.selectRenderer(config, [paddle1, paddle2]);
+        }
+        Start.prototype.selectRenderer = function (config, actor) {
+            if (config.babylon == true) {
+                var render = new tsPong.Pong(actor);
+            }
+            if (config.three == true) {
+                var render = new threePong.Pong(actor);
+            }
+            ;
+        };
+        return Start;
+    }());
+    exports.Start = Start;
+});
+define("main", ["require", "exports", "core/renderer_config", "core/start"], function (require, exports, renderer_config_1, start_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var startGame = new start_1.Start(renderer_config_1.graphicsLibs);
+});
 define("core/renderFactory", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -313,37 +335,6 @@ define("core/setup", ["require", "exports"], function (require, exports) {
         return Setup;
     }());
     exports.Setup = Setup;
-});
-define("core/start", ["require", "exports", "babylon/Pong", "three/Pong", "core/Actor"], function (require, exports, tsPong, threePong, Actor_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var Start = (function () {
-        function Start(config) {
-            var paddle1 = new Actor_1.Actor({ color: "#FF0000", location: { x: 0, y: 0.5, z: 12 }, scale: { x: 6, y: 1, z: 1 } });
-            var paddle2 = new Actor_1.Actor({ color: "#00FF00", location: { x: 0, y: 0.5, z: -12 }, scale: { x: 6, y: 1, z: 1 } });
-            this.selectRenderer(config, [paddle1, paddle2]);
-        }
-        Start.prototype.selectRenderer = function (config, actor) {
-            if (config.babylon == true) {
-                console.log("BabylonJS is active!");
-                var pong = new tsPong.Pong(actor);
-            }
-            else if (config.three == true) {
-                console.log("threeJS is active!");
-                var pong = new threePong.Pong();
-            }
-            else {
-                console.log("You have no renderers active!");
-            }
-        };
-        return Start;
-    }());
-    exports.Start = Start;
-});
-define("main", ["require", "exports", "core/renderer_config", "core/start"], function (require, exports, renderer_config_1, start_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var startGame = new start_1.Start(renderer_config_1.graphicsLibs);
 });
 define("generic/Ball", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -383,5 +374,37 @@ define("generic/Ball", ["require", "exports"], function (require, exports) {
         return Ball;
     }());
     exports.Ball = Ball;
+});
+define("three/Paddle(old)", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Paddle = (function () {
+        function Paddle(dims, location, color, scene) {
+            this.dims = dims;
+            this.location = location;
+            this.color = color;
+            this.scene = scene;
+            this.mesh = this.buildMesh(dims, color);
+            this.setPosition(this.mesh, location);
+            this.scene.add(this.mesh);
+        }
+        Paddle.prototype.buildMesh = function (dims, color) {
+            var geo = new THREE.BoxGeometry(dims.x, dims.y, dims.z);
+            var mat = this.buildMaterial(color);
+            var mesh = new THREE.Mesh(geo, mat);
+            return mesh;
+        };
+        Paddle.prototype.buildMaterial = function (color) {
+            var mat = new THREE.MeshStandardMaterial();
+            mat.color = new THREE.Color(color);
+            mat.roughness = 0.25;
+            return mat;
+        };
+        Paddle.prototype.setPosition = function (mesh, loc) {
+            mesh.position.set(loc.x, loc.y, loc.z);
+        };
+        return Paddle;
+    }());
+    exports.Paddle = Paddle;
 });
 //# sourceMappingURL=main.js.map

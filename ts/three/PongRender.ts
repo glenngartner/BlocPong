@@ -13,6 +13,7 @@ export class PongRender extends THREE.WebGLRenderer{
             canvas: <HTMLCanvasElement>document.getElementById('renderCanvas')
         });
         this.setSize(window.innerWidth, window.innerHeight);
+        this.setClearColor(0x8bfff8, 1);
         document.body.appendChild(this.domElement);
         this.animate();
     }
