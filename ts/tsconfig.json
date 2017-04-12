@@ -18,10 +18,13 @@
         "suppressImplicitAnyIndexErrors": true,
         "typeRoots": ["../node_modules/@types"]
     },
+//    "files": [
+////        "**/*.ts"
+//    ],
     "exclude": [
         "node_modules",
         "typings/browser",
-        "typings/browser.d.ts"
+        "typings/browser.d.ts",
     ],
     "compileOnSave": true,
     "buildOnSave": true,
