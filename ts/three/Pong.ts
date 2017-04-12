@@ -12,7 +12,7 @@ import {Background} from "./Background";
 
 export class Pong {
 
-    constructor() {
+    constructor(actor?:Actor) {
 
         // remove the babylonjs required canvas element (three adds its own)
 

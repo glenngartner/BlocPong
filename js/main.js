@@ -20,11 +20,10 @@ define("babylon/Pong", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
-        function Pong() {
+        function Pong(array) {
             this.initGame();
             this.createScene();
-            this.createPaddles('paddle1', 4, 1, 1, 0, 0, 10);
-            this.createPaddles('paddle2', 4, 1, 1, 0, 0, -10);
+            this.createPaddles(array);
             this.animate();
         }
         Pong.prototype.initGame = function () {
@@ -46,14 +45,17 @@ define("babylon/Pong", ["require", "exports"], function (require, exports) {
             groundMat.microSurface = 0;
             groundMat.reflectionTexture = probe.cubeTexture;
         };
-        Pong.prototype.createPaddles = function (name, w, h, d, x, y, z) {
-            var paddle = BABYLON.MeshBuilder.CreateBox(name, { width: w, height: h, depth: d }, this._scene);
-            paddle.position = new BABYLON.Vector3(x, y, z);
-            var material = new BABYLON.PBRMaterial('mat', this._scene);
-            material.albedoColor = BABYLON.Color3.Red();
-            material.reflectivityColor = BABYLON.Color3.Gray();
-            material.microSurface = .25;
-            paddle.material = material;
+        Pong.prototype.createPaddles = function (actors) {
+            for (var _i = 0, actors_1 = actors; _i < actors_1.length; _i++) {
+                var actor = actors_1[_i];
+                var paddle = BABYLON.MeshBuilder.CreateBox(actor.name, { width: actor.scale.x, height: actor.scale.y, depth: actor.scale.z }, this._scene);
+                paddle.position = new BABYLON.Vector3(actor.location.x, actor.location.y, actor.location.z);
+                var material = new BABYLON.PBRMaterial('mat', this._scene);
+                material.albedoColor = BABYLON.Color3.FromHexString(actor.color);
+                material.reflectivityColor = BABYLON.Color3.Gray();
+                material.microSurface = .25;
+                paddle.material = material;
+            }
         };
         Pong.prototype.animate = function () {
             var _this = this;
@@ -210,7 +212,7 @@ define("three/Pong", ["require", "exports", "three/Paddle", "three/Camera", "thr
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Pong = (function () {
-        function Pong() {
+        function Pong(actor) {
             var scene = new THREE.Scene();
             var camera = new Camera_1.PongCamera({ x: 0, y: 30, z: 0 }, { x: -Math.PI / 2, y: 0, z: 0 });
             var renderer = new PongRender_1.PongRender(scene, camera);
@@ -236,17 +238,95 @@ define("three/Pong", ["require", "exports", "three/Paddle", "three/Camera", "thr
     }());
     exports.Pong = Pong;
 });
-define("core/start", ["require", "exports", "babylon/Pong", "three/Pong"], function (require, exports, tsPong, threePong) {
+define("core/Actor", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Actor = (function () {
+        function Actor(actor) {
+            this.name = "noName";
+            this.location = { x: 0, y: 0, z: 0 };
+            this.rotation = { x: 0, y: 0, z: 0 };
+            this.scale = { x: 1, y: 1, z: 1 };
+            this.color = "#CCCCCC";
+            this.metal = 0;
+            this.roughness = 0.25;
+            this.envColor = 0xCCCCCC;
+            if (actor.name != null)
+                this.name = actor.name;
+            if (actor.location != null)
+                this.location = actor.location;
+            if (actor.rotation != null)
+                this.rotation = actor.rotation;
+            if (actor.scale != null)
+                this.scale = actor.scale;
+            if (actor.color != null)
+                this.color = actor.color;
+            if (actor.colorTex != null)
+                this.colorTex = actor.colorTex;
+            if (actor.metal != null)
+                this.metal = actor.metal;
+            if (actor.metalTex != null)
+                this.metalTex = actor.metalTex;
+            if (actor.roughness != null)
+                this.roughness = actor.roughness;
+            if (actor.roughnessTex != null)
+                this.roughnessTex = actor.roughnessTex;
+            if (actor.normalTex != null)
+                this.normalTex = actor.normalTex;
+            if (actor.envColor != null)
+                this.envColor = actor.envColor;
+            if (actor.envTex != null)
+                this.envTex = actor.envTex;
+        }
+        return Actor;
+    }());
+    exports.Actor = Actor;
+});
+define("core/renderFactory", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var RenderFactory = (function () {
+        function RenderFactory() {
+        }
+        RenderFactory.createActor = function (config, actor) {
+            if (config.three == true) {
+            }
+        };
+        RenderFactory.libSelector = function (config) {
+            for (var lib in config) {
+                if (lib.valueOf()) {
+                    console.log();
+                }
+            }
+            return;
+        };
+        return RenderFactory;
+    }());
+    exports.RenderFactory = RenderFactory;
+});
+define("core/setup", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var Setup = (function () {
+        function Setup(config) {
+        }
+        return Setup;
+    }());
+    exports.Setup = Setup;
+});
+define("core/start", ["require", "exports", "babylon/Pong", "three/Pong", "core/Actor"], function (require, exports, tsPong, threePong, Actor_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Start = (function () {
         function Start(config) {
-            this.selectRenderer(config);
+            var paddle1 = new Actor_1.Actor({ color: "#FF0000", location: { x: 0, y: 0.5, z: 12 }, scale: { x: 6, y: 1, z: 1 } });
+            var paddle2 = new Actor_1.Actor({ color: "#00FF00", location: { x: 0, y: 0.5, z: -12 }, scale: { x: 6, y: 1, z: 1 } });
+            this.selectRenderer(config, [paddle1, paddle2]);
         }
-        Start.prototype.selectRenderer = function (config) {
+        Start.prototype.selectRenderer = function (config, actor) {
             if (config.babylon == true) {
                 console.log("BabylonJS is active!");
-                var pong = new tsPong.Pong();
+                var pong = new tsPong.Pong(actor);
             }
             else if (config.three == true) {
                 console.log("threeJS is active!");

@@ -1,4 +1,4 @@
-import { Start } from "../core/start";
+import {Start} from "../core/start";
 
 export class Pong {
 
@@ -8,11 +8,11 @@ export class Pong {
     private _camera: BABYLON.ArcRotateCamera;
     private _light: BABYLON.Light;
 
-    constructor() {
+    constructor(array: Array<Actor>) {
         this.initGame();
         this.createScene();
-        this.createPaddles('paddle1', 4, 1, 1, 0, 0, 10);
-        this.createPaddles('paddle2', 4, 1, 1, 0, 0, -10);
+        this.createPaddles(array);
+        // this.createPaddles('paddle2', 4, 1, 1, 0, 0, -10);
         this.animate();
     }
 
@@ -60,16 +60,20 @@ export class Pong {
         groundMat.reflectionTexture = probe.cubeTexture;
     }
 
-    createPaddles(name: string, w: number, h: number, d: number, x: number, y: number, z: number) {
-        let paddle = BABYLON.MeshBuilder.CreateBox(name, { width: w, height: h, depth: d }, this._scene);
-        paddle.position = new BABYLON.Vector3(x, y, z);
+    createPaddles(actors: Array<Actor>) {
+        for (let actor of actors) {
 
-        let material = new BABYLON.PBRMaterial('mat', this._scene);
-        material.albedoColor = BABYLON.Color3.Red();
-        // material.reflectionColor = BABYLON.Color3.White();
-        material.reflectivityColor = BABYLON.Color3.Gray();
-        material.microSurface = .25;
-        paddle.material = material;
+
+            let paddle = BABYLON.MeshBuilder.CreateBox(actor.name, {width: actor.scale.x, height: actor.scale.y, depth: actor.scale.z}, this._scene);
+            paddle.position = new BABYLON.Vector3(actor.location.x, actor.location.y, actor.location.z);
+
+            let material = new BABYLON.PBRMaterial('mat', this._scene);
+            material.albedoColor = BABYLON.Color3.FromHexString(actor.color);
+            // material.reflectionColor = BABYLON.Color3.White();
+            material.reflectivityColor = BABYLON.Color3.Gray();
+            material.microSurface = .25;
+            paddle.material = material;
+        }
     }
 
     animate(): void {
