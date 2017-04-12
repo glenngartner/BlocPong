@@ -1,4 +1,5 @@
-import {Pong} from "./Pong";
+import {graphicsLibs} from "./core/renderer_config";
+import {Start} from "./core/start";
 
-let pong = new Pong();
 
+let startGame = new Start(graphicsLibs);

@@ -1,14 +1,23 @@
-import * as Renderer from "./renderer_config";
+import * as tsPong from "../babylon/Pong";
+import * as threePong from "../three/Pong";
 
 export class Start {
 
-  constructor(){
-    if (Renderer.lib.three == true){
-      console.log("threeJS is active!");
-    } else if (Renderer.lib.babylon == true){
-      console.log("BabylonJS is active!");
-    } else {
-      console.log("You have no renderers active!"); 
+    private renderer: rendererConfig;
+
+    constructor(config:rendererConfig) {
+        this.selectRenderer(config);
     }
-  }
+
+    selectRenderer(config: rendererConfig) {
+        if (config.babylon == true) {
+            console.log("BabylonJS is active!");
+            let pong = new tsPong.Pong();
+        } else if (config.three == true) {
+            console.log("threeJS is active!");
+            let pong = new threePong.Pong();
+        } else {
+            console.log("You have no renderers active!");
+        }
+    }
 }
