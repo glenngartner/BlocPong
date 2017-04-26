@@ -5,8 +5,8 @@
  * Created by glenn on 2/28/2017.
  */
 import {Paddle} from "./Paddle";
-import {PongCamera} from "./Camera";
-import {PongRender} from "./PongRender";
+import {Camera} from "./Camera";
+import {Render} from "./Render";
 import {PongLight} from "./PongLight";
 import {Background} from "./Background";
 
@@ -18,8 +18,8 @@ export class Pong {
 
         // basic scene setup (scene, camera, renderer, and light
         let scene = new THREE.Scene();
-        let camera = new PongCamera({x:0, y:30, z:0}, {x:-Math.PI/2, y:0, z:0});
-        let renderer = new PongRender(scene, camera);
+        let camera = new Camera({x:0, y:30, z:0}, {x:-Math.PI/2, y:0, z:0});
+        let renderer = new Render(scene, camera);
         // let background = new Background(scene);
         // let centerLight = new PongLight(0xFFFFFF, scene,{x:0, y:10, z:0}, 2);
         let centerLight = new THREE.HemisphereLight("white", "brown", 2);

@@ -1,5 +1,5 @@
 
-export class PongCamera extends THREE.PerspectiveCamera {
+export class Camera extends THREE.PerspectiveCamera {
 
     constructor(
         public loc: vector3 = {x:0, y:40, z:0},

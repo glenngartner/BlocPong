@@ -2,7 +2,7 @@
  * Created by glenngartner on 3/14/17.
  */
 
-export class PongRender extends THREE.WebGLRenderer{
+export class Render extends THREE.WebGLRenderer{
 
     constructor(
         public scene: THREE.Scene,

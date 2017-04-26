@@ -18,11 +18,11 @@
         "suppressImplicitAnyIndexErrors": true,
         "typeRoots": ["../node_modules/@types"]
     },
-    "exclude": [
-        "node_modules",
-        "typings/browser",
-        "typings/browser.d.ts"
-    ],
+  "exclude": [
+    "node_modules",
+    "typings/browser",
+    "typings/browser.d.ts"
+  ],
     "compileOnSave": true,
     "buildOnSave": true,
     "atom": {

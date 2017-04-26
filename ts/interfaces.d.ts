@@ -1,3 +1,4 @@
+
 interface rendererConfig {
   three: boolean,
   babylon: boolean
@@ -10,8 +11,8 @@ interface vector3 {
 }
 
 interface Actor {
-  name?: string, 
-  location?: vector3, 
+  name?: string,
+  location?: vector3,
   rotation?: vector3,
   scale?: vector3,
   color?: string,
@@ -23,4 +24,20 @@ interface Actor {
   normalTex?: string,
   envColor?: number,
   envTex?: string
+}
+
+interface Renderer {
+    createScene();
+    createCamera();
+    createBackground();
+    createActor(actor:Actor);
+    createMaterial();
+    createDirectionalLight();
+    render();
+}
+
+interface RendererInstance extends Renderer {
+  _scene;
+  _camera;
+  _light;
 }
