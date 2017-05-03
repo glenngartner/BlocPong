@@ -1,4 +1,4 @@
-export class Paddle {
+export class Mesh {
 
     private mesh: THREE.Mesh;
 
@@ -9,7 +9,12 @@ export class Paddle {
 
     buildMesh(actors: Array<Actor>) {
         for (let actor of actors) {
-            let geo = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
+            let geo: THREE.Geometry;
+            if (actor.type == "box") {
+                geo = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
+            } else if (actor.type == "sphere"){
+                geo = new THREE.SphereGeometry(actor.scale.x/2, 16, 16);
+            }
             let mat = this.buildMaterial(actor.color);
             let mesh = new THREE.Mesh(geo, mat);
             this.setPosition(mesh, actor.location);

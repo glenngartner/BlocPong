@@ -1,10 +1,11 @@
 import {Camera} from "./Camera";
 import {Render} from "./Render";
-import {Paddle} from "./Paddle";
+import {Mesh} from "./Mesh";
 
 
 export class ThreeRenderer implements RendererInstance {
 
+    _type: string = "threeJS";
     _scene: THREE.Scene;
     _camera: Camera;
     _light: THREE.DirectionalLight;
@@ -43,7 +44,7 @@ export class ThreeRenderer implements RendererInstance {
         //
         // // create the paddles
         let paddleDims = {x: 1, y: 0.5, z: 4};
-        let paddle = new Paddle(actor, this._scene);
+        let mesh = new Mesh(actor, this._scene);
     };
 
     createMaterial(){};

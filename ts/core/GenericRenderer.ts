@@ -4,60 +4,65 @@ import {ThreeRenderer} from "../three/ThreeRenderer";
 
 export class GenericRenderer implements Renderer {
 
-    framework: Renderer;
-    framework2: Renderer;
+    _type: "generic";
     frameworks: Array<Renderer>;
 
+    get getFrameworks(): Array<Renderer>{
+        let frameworks = this.frameworks;
+        return frameworks;
+    }
+
     constructor(private renderers: Array<string>) {
-        // this.selectRenderer(renderers);
-        this.framework = new BabylonRenderer();
-        this.framework2 = new ThreeRenderer(); 
+        this.frameworks = [];
+        this.selectRenderer(renderers);
     }
 
     selectRenderer(renderers: Array<string>) {
         for (let renderer of renderers) {
             if (renderer == "babylonjs") {
-                this.framework = new BabylonRenderer();
-            }
-            if (renderer == "threejs") {
-                this.framework2 = new ThreeRenderer();
+                this.frameworks.push(new BabylonRenderer());
+                console.log("using babylonJS");
+            } if (renderer == "threejs") {
+                this.frameworks.push(new ThreeRenderer());
+                console.log("using threeJS");
             }
         }
     }
 
+    do(array: Array<Renderer>, func: Function) {
+        for (let renderer of array) {
+            // renderer.func;
+        }
+    }
+
     createScene() {
-        if (this.framework) this.framework.createScene();
-        if (this.framework2) this.framework2.createScene();
+        for (let framework of this.frameworks){framework.createScene();
+        }
     };
 
     createCamera() {
-        if (this.framework) this.framework.createCamera();
-        if (this.framework2) this.framework2.createCamera();
+        for (let framework of this.frameworks){framework.createCamera();
+        }
     }
 
     createBackground() {
-        if (this.framework) this.framework.createBackground();
-        if (this.framework2) this.framework2.createBackground();
+        for (let framework of this.frameworks){framework.createBackground()};
     }
 
     createActor(actor: Actor) {
-        if (this.framework) this.framework.createActor(actor);
-        if (this.framework2) this.framework2.createActor(actor);
+        for (let framework of this.frameworks){framework.createActor(actor)};
     };
 
     createMaterial() {
-        if (this.framework) this.framework.createMaterial();
-        if (this.framework2) this.framework2.createMaterial();
-            };
+        for (let framework of this.frameworks){framework.createMaterial()};
+    };
 
     createDirectionalLight() {
-        if (this.framework) this.framework.createDirectionalLight();
-        if (this.framework2) this.framework2.createDirectionalLight();
-            };
+        for (let framework of this.frameworks){framework.createDirectionalLight()};
+    };
 
     render() {
-        if (this.framework) this.framework.render();
-        if (this.framework2) this.framework2.render();
+        for (let framework of this.frameworks){framework.render()};
     };
 
 }

@@ -3,11 +3,12 @@
  * Created by glenn on 4/12/2017.
  */
 
-export class Actor implements Actor {
+export class ActorBuilder {
 
     // default actor values
 
     name: string = "noName";
+    type: string = "box";
     location: vector3 = {x: 0, y: 0, z: 0};
     rotation: vector3 = {x: 0, y: 0, z: 0};
     scale: vector3 = {x: 1, y: 1, z: 1};

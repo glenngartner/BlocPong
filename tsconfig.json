@@ -8,7 +8,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "sourceMap": true,
-        "outFile": "../js/main.js",
+        "outFile": "js/main.js",
         "declaration": false,
         "noImplicitAny": false,
         "noImplicitUseStrict": false,
@@ -16,7 +16,8 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "typeRoots": ["../node_modules/@types"]
+        "typeRoots": ["node_modules/@types"], 
+        "sourceRoot": "ts"
     },
   "exclude": [
     "node_modules",

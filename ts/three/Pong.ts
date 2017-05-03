@@ -4,7 +4,7 @@
 /**
  * Created by glenn on 2/28/2017.
  */
-import {Paddle} from "./Paddle";
+import {Mesh} from "./Mesh";
 import {Camera} from "./Camera";
 import {Render} from "./Render";
 import {PongLight} from "./PongLight";
@@ -27,8 +27,8 @@ export class Pong {
 
         // create paddles
         let paddleDims = {x: 1, y: 0.5, z: 4};
-        let compPaddle = new Paddle(actor, scene);
-        // let playerPaddle = new Paddle(paddleDims, {x:14, y:0, z:0}, 0xFFFF00, scene);
+        let compPaddle = new Mesh(actor, scene);
+        // let playerPaddle = new Mesh(paddleDims, {x:14, y:0, z:0}, 0xFFFF00, scene);
 
         // create game board
         let board = new THREE.Mesh(
