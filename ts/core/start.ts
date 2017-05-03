@@ -13,9 +13,6 @@ export class Start {
         let paddle1 = new Actor(<Actor>{color: "#FF0000", location:{x:0, y:0.5, z:12}, scale:{x:6, y:1, z:1}});
         let paddle2 = new Actor(<Actor>{color: "#00FF00", location:{x:0, y:0.5, z:-12}, scale:{x:6, y:1, z:1}});
 
-        //this.selectRenderer(config, [paddle1, paddle2]);
-        // let setup = new Setup(config);
-
         this.renderer = new GenericRenderer(config); 
         this.renderer.createScene();
         this.renderer.createCamera();

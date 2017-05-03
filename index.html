@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Bloc Pong</title>
+    <!--<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">-->
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
     <script src="js/three.min.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -10,7 +11,19 @@
     <script src="js/hand.min.js"></script>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas>
-    <script data-main="js/main" src="js/require.js"></script>
+<div>
+
+    <div class="col">
+        <h2>Babylon</h2>
+        <canvas id="renderCanvas"></canvas>
+    </div>
+
+    <div class="col">
+        <h2>Three</h2>
+        <canvas id="threeCanvas"></canvas>
+    </div>
+
+</div>
+<script data-main="js/main" src="js/require.js"></script>
 </body>
 </html>
