@@ -11,7 +11,7 @@ export class ActorManager {
         console.log("actor manager created");
     }
 
-    get getActors(){
+    get getActors() {
         return this.actors;
     }
 
@@ -26,13 +26,14 @@ export class ActorManager {
             // console.log("actor " + actor.name + " selected = " + actor.selected);
 
             // when receiving the selected property, reset all selected values to false, reset the selections
-            if (prop === "selected"){
+            if (prop === "selected") {
                 actor.selected = false;
             }
 
             if (actor.name == name) {
                 actor[prop] = value;
                 console.log("actor " + actor.name + " property: '" + prop + "' is now " + actor[prop]);
+            }
         }
     }
 }
