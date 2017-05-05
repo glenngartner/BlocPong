@@ -1,4 +1,5 @@
 
+import {ActorManager} from "./ActorManager";
 /**
  * Created by glenn on 4/12/2017.
  */
@@ -8,6 +9,7 @@ export class ActorBuilder {
     // default actor values
 
     name: string = "noName";
+    selected: boolean = false;
     type: string = "box";
     location: vector3 = {x: 0, y: 0, z: 0};
     rotation: vector3 = {x: 0, y: 0, z: 0};
@@ -22,11 +24,13 @@ export class ActorBuilder {
     envColor: number = 0xCCCCCC;
     envTex: string;
 
-    constructor(actor: Actor) {
+    constructor(manager: ActorManager, actor: Actor) {
 
         for (let prop in actor) {
             if (this.hasOwnProperty(prop) && actor[prop] != null) this[prop] = actor[prop];
         }
+
+        manager.loadActors(this);
 
         // if (actor.name != null) this.name = actor.name;
         // if (actor.location != null) this.location = actor.location;

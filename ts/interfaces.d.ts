@@ -11,6 +11,7 @@ interface vector3 {
 
 interface Actor {
     name?: string,
+    selected?: boolean,
     type?: string,
     location?: vector3,
     rotation?: vector3,
@@ -34,6 +35,7 @@ interface Renderer {
     createActor(actor: Actor);
     createMaterial();
     createDirectionalLight();
+    addEvent();
     render();
 }
 

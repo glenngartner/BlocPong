@@ -7,11 +7,6 @@ export class GenericRenderer implements Renderer {
     _type: "generic";
     frameworks: Array<Renderer>;
 
-    get getFrameworks(): Array<Renderer>{
-        let frameworks = this.frameworks;
-        return frameworks;
-    }
-
     constructor(private renderers: Array<string>) {
         this.frameworks = [];
         this.selectRenderer(renderers);
@@ -53,6 +48,9 @@ export class GenericRenderer implements Renderer {
                 case "createDirectionalLight": renderer.createDirectionalLight();
                 break;
 
+                case "addEvent": renderer.addEvent();
+                break;
+
                 case "render": renderer.render();
                 break;
             }
@@ -61,22 +59,18 @@ export class GenericRenderer implements Renderer {
 
     createScene() {
         this.do("createScene");
-        // for (let framework of this.frameworks){framework.createScene()};
     };
 
     createCamera() {
-        // for (let framework of this.frameworks){framework.createCamera()};
         this.do("createCamera");
     }
 
     createBackground() {
-        // for (let framework of this.frameworks){framework.createBackground()};
         this.do("createBackground");
     }
 
     createActor(actor: Actor) {
         for (let framework of this.frameworks){framework.createActor(actor)};
-        // this.do("createActor", arguments);
     };
     createMaterial() {
         this.do("createMaterial");
@@ -84,12 +78,14 @@ export class GenericRenderer implements Renderer {
 
     createDirectionalLight() {
         this.do("createDirectionalLight");
-        // for (let framework of this.frameworks){framework.createDirectionalLight()};
+    };
+
+    addEvent(){
+        this.do("addEvent");
     };
 
     render() {
         this.do("render");
-        // for (let framework of this.frameworks){framework.render()};
     };
 
 }

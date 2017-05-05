@@ -9,7 +9,7 @@ export class BabylonRenderer implements RendererInstance {
 
     createScene() {
         console.log("babylon scene created");
-        this._canvas = <HTMLCanvasElement>document.getElementById('renderCanvas');
+        this._canvas = <HTMLCanvasElement>document.getElementById('babylonCanvas');
         this._engine = new BABYLON.Engine(this._canvas, true);
         this._scene = new BABYLON.Scene(this._engine);
     }
@@ -76,6 +76,18 @@ export class BabylonRenderer implements RendererInstance {
         console.log("babylonjs sunlight created!");
         this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this._scene);
     }
+
+    addEvent(){
+        // add input event for user paddle
+        this._canvas.addEventListener("click", ev=>{
+            let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
+
+            if (pickResult){
+                console.log("babylon scene picked!");
+                console.log("picked mesh: " + pickResult.pickedMesh.name);
+            }
+        })
+    };
 
     render() {
         console.log("babylonjs renderer looping");

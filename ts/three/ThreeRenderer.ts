@@ -6,12 +6,14 @@ import {Mesh} from "./Mesh";
 export class ThreeRenderer implements RendererInstance {
 
     _type: string = "threeJS";
+    _canvas: HTMLCanvasElement;
     _scene: THREE.Scene;
     _camera: Camera;
     _light: THREE.DirectionalLight;
 
     createScene() {
         console.log("threejs scene created!");
+        this._canvas = <HTMLCanvasElement>document.getElementById("threeCanvas");
         this._scene = new THREE.Scene();
     };
 
@@ -50,10 +52,13 @@ export class ThreeRenderer implements RendererInstance {
     createMaterial(){};
 
     createDirectionalLight() {
-        console.log("threejs sunlight started!");
         let centerLight = new THREE.HemisphereLight("white", "brown", 2);
         this._scene.add(centerLight);
         console.log("threejs sunlight created!");
+    };
+
+    addEvent(){
+
     };
 
     render() {
