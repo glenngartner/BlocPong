@@ -11,6 +11,7 @@ export class ThreeRenderer implements RendererInstance {
     _scene: THREE.Scene;
     _camera: Camera;
     _light: THREE.DirectionalLight;
+    _renderer: Render;
 
     constructor(private actorManager: ActorManager){
 
@@ -63,12 +64,37 @@ export class ThreeRenderer implements RendererInstance {
     };
 
     addEvent(){
+        this._canvas.addEventListener("click", ev=>{
+            console.log("threejs canvas has been clicked");
+        })
+    };
 
+    highlightActor(actor:Actor){
+        console.log("threejs actor should be highlighted now");
+        let outline = new THREE.OutlineEffect( this._renderer, {defaultThickNess: 0.01, defaultColor: new THREE.Color( 0x888888 ),
+        defaultAlpha: 0.8, defaultKeepAlive: true } );
+    };
+
+    removeHighlight(actor:Actor){};
+
+    checkActorState=()=>{
+        // console.log("threejs is constantly checking actor state");
+        let actorList = this.actorManager.getActors;
+
+        // identify the selected actor, per the generic renderer actor list
+        for (let actor of actorList){
+            if (actor.selected == true){
+                this.highlightActor(actor);
+            } else {
+                this.removeHighlight(actor);
+            }
+        }
     };
 
     render() {
         console.log("threejs renderer started");
-        let _renderer = new Render(this._scene, this._camera);
+        this._renderer = new Render(this._scene, this._camera);
+        this._renderer.LoopFunction = this.checkActorState;
     };
 
 }

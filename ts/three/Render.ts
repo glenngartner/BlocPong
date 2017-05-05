@@ -4,6 +4,9 @@
 
 export class Render extends THREE.WebGLRenderer{
 
+    private loopThisFunction: Function = f=>{};
+
+
     constructor(
         public scene: THREE.Scene,
         public camera: THREE.Camera
@@ -17,11 +20,17 @@ export class Render extends THREE.WebGLRenderer{
         this.setSize(window.innerWidth/2, window.innerHeight/2);
         this.setClearColor(0x8bfff8, 1);
         document.body.appendChild(this.domElement);
+
         this.animate();
+    }
+
+    set LoopFunction(func: Function){
+        this.loopThisFunction = func;
     }
 
     animate=()=>{
         requestAnimationFrame(this.animate);
         this.render(this.scene, this.camera);
+        this.loopThisFunction();
     }
 }

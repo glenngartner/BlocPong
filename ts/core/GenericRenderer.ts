@@ -5,10 +5,10 @@ import {ActorManager} from "./ActorManager";
 
 export class GenericRenderer implements Renderer {
 
-    _type: "generic";
+    _type: string = "generic";
     frameworks: Array<Renderer>;
 
-    constructor(private actorManager: ActorManager, private renderers: Array<string>) {
+    constructor(public actorManager: ActorManager, private renderers: Array<string>) {
         this.frameworks = [];
         this.selectRenderer(renderers);
     }

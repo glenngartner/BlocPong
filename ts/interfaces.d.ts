@@ -43,4 +43,7 @@ interface RendererInstance extends Renderer {
     _scene;
     _camera;
     _light;
+    highlightActor(actor:Actor);
+    removeHighlight(actor:Actor);
+    checkActorState();
 }

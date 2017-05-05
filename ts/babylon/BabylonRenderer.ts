@@ -1,4 +1,7 @@
 import {ActorManager} from "../core/ActorManager";
+import {GenericRenderer} from "../core/GenericRenderer";
+import {renderers} from "../core/renderer_config";
+
 export class BabylonRenderer implements RendererInstance {
 
     private _canvas: HTMLCanvasElement;
@@ -95,11 +98,13 @@ export class BabylonRenderer implements RendererInstance {
         })
     };
 
-    highLightActor(actor: Actor){
+    highlightActor(actor: Actor){
         let meshToHighlight = this._scene.getMeshByName(actor.name);
         console.log("babylon mesh selected: " + meshToHighlight.name);
-        meshToHighlight.outlineWidth = .25;
+        meshToHighlight.outlineWidth = .1;
+        meshToHighlight.outlineColor = BABYLON.Color3.Black();
         meshToHighlight.renderOutline = true;
+
     }
 
     removeHighlight(actor: Actor){
@@ -107,20 +112,25 @@ export class BabylonRenderer implements RendererInstance {
         meshToRemoveHighlight.renderOutline = false;
     }
 
-    render() {
-        console.log("babylonjs renderer looping");
-        this._engine.runRenderLoop(() => {
-            this._scene.render();
+    checkActorState(){
 
         let actorList = this.actorManager.getActors;
 
+        // identify the selected actor, per the generic renderer actor list
         for (let actor of actorList){
             if (actor.selected == true){
-                this.highLightActor(actor);
+                this.highlightActor(actor);
             } else {
                 this.removeHighlight(actor);
             }
         }
+    }
+
+    render() {
+        this._engine.runRenderLoop(() => {
+            this._scene.render();
+
+            this.checkActorState();
 
         });
 
