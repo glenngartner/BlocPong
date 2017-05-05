@@ -45,11 +45,13 @@ export class BabylonRenderer implements RendererInstance {
             let mesh: BABYLON.Mesh;
 
             if (actor.type == "box") {
-                mesh = BABYLON.MeshBuilder.CreateBox(actor.name, {
+                mesh = BABYLON.MeshBuilder.CreateBox(
+                    actor.name,
+                    {
                     width: actor.scale.x,
                     height: actor.scale.y,
                     depth: actor.scale.z
-                }, this._scene);
+                    }, this._scene);
             } else if (actor.type == "sphere") {
                 mesh = BABYLON.MeshBuilder.CreateSphere(
                     actor.name,
@@ -94,20 +96,34 @@ export class BabylonRenderer implements RendererInstance {
     };
 
     highLightActor(actor: Actor){
+        let meshToHighlight = this._scene.getMeshByName(actor.name);
+        console.log("babylon mesh selected: " + meshToHighlight.name);
+        meshToHighlight.outlineWidth = .25;
+        meshToHighlight.renderOutline = true;
+    }
 
+    removeHighlight(actor: Actor){
+        let meshToRemoveHighlight = this._scene.getMeshByName(actor.name);
+        meshToRemoveHighlight.renderOutline = false;
     }
 
     render() {
         console.log("babylonjs renderer looping");
         this._engine.runRenderLoop(() => {
             this._scene.render();
-        });
 
         let actorList = this.actorManager.getActors;
 
         for (let actor of actorList){
-            if (actor.selected == true){this.highLightActor(actor)};
+            if (actor.selected == true){
+                this.highLightActor(actor);
+            } else {
+                this.removeHighlight(actor);
+            }
         }
+
+        });
+
 
         window.addEventListener('resize', () => {
             this._engine.resize();
