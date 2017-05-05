@@ -1,3 +1,4 @@
+import {ActorManager} from "../core/ActorManager";
 export class BabylonRenderer implements RendererInstance {
 
     private _canvas: HTMLCanvasElement;
@@ -6,6 +7,9 @@ export class BabylonRenderer implements RendererInstance {
     _camera: BABYLON.ArcRotateCamera;
     _light: BABYLON.Light;
     _type: string = "babylonjs";
+
+    constructor(private actorManager: ActorManager){
+    }
 
     createScene() {
         console.log("babylon scene created");
@@ -84,16 +88,26 @@ export class BabylonRenderer implements RendererInstance {
 
             if (pickResult){
                 console.log("babylon scene picked!");
-                console.log("picked mesh: " + pickResult.pickedMesh.name);
+                this.actorManager.changeActorPropertyValue(pickResult.pickedMesh.name, "selected", true);
             }
         })
     };
+
+    highLightActor(actor: Actor){
+
+    }
 
     render() {
         console.log("babylonjs renderer looping");
         this._engine.runRenderLoop(() => {
             this._scene.render();
         });
+
+        let actorList = this.actorManager.getActors;
+
+        for (let actor of actorList){
+            if (actor.selected == true){this.highLightActor(actor)};
+        }
 
         window.addEventListener('resize', () => {
             this._engine.resize();

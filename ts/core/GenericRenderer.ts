@@ -1,13 +1,14 @@
 import {renderers} from "./renderer_config";
 import {BabylonRenderer} from "../babylon/BabylonRenderer";
 import {ThreeRenderer} from "../three/ThreeRenderer";
+import {ActorManager} from "./ActorManager";
 
 export class GenericRenderer implements Renderer {
 
     _type: "generic";
     frameworks: Array<Renderer>;
 
-    constructor(private renderers: Array<string>) {
+    constructor(private actorManager: ActorManager, private renderers: Array<string>) {
         this.frameworks = [];
         this.selectRenderer(renderers);
     }
@@ -15,12 +16,12 @@ export class GenericRenderer implements Renderer {
     selectRenderer(renderers: Array<string>) {
         for (let renderer of renderers) {
             if (renderer == "babylonjs") {
-                this.frameworks.push(new BabylonRenderer());
+                this.frameworks.push(new BabylonRenderer(this.actorManager));
                 console.log("using babylonJS");
             }
 
             if (renderer == "threejs") {
-                this.frameworks.push(new ThreeRenderer());
+                this.frameworks.push(new ThreeRenderer(this.actorManager));
                 console.log("using threeJS");
             }
         }

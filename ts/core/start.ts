@@ -15,7 +15,7 @@ export class Start {
         let ball = new ActorBuilder(actorManager, <Actor>{name: "ball", color: "#0000FF", location:{x:0, y:0, z:0}, type:"sphere"});
 
 
-        this.renderer = new GenericRenderer(config); 
+        this.renderer = new GenericRenderer(actorManager, config);
         this.renderer.createScene();
         this.renderer.createCamera();
         this.renderer.createBackground();

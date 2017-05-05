@@ -1,6 +1,7 @@
 import {Camera} from "./Camera";
 import {Render} from "./Render";
 import {Mesh} from "./Mesh";
+import {ActorManager} from "../core/ActorManager";
 
 
 export class ThreeRenderer implements RendererInstance {
@@ -10,6 +11,10 @@ export class ThreeRenderer implements RendererInstance {
     _scene: THREE.Scene;
     _camera: Camera;
     _light: THREE.DirectionalLight;
+
+    constructor(private actorManager: ActorManager){
+
+    }
 
     createScene() {
         console.log("threejs scene created!");
