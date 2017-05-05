@@ -20,20 +20,19 @@ export class ActorManager {
         console.log(newActor.name + " loaded into Actor Manager");
     }
 
-    changeActorPropertyValue(name: string, prop: string, value: string | boolean | vector3 | number) {
+    changeActorPropertyValue(name: string | number, prop: string, value: string | boolean | vector3 | number) {
         for (let actor of this.actors) {
 
             // console.log("actor " + actor.name + " selected = " + actor.selected);
 
             // when receiving the selected property, reset all selected values to false, reset the selections
-            if (prop == "selected"){
+            if (prop === "selected"){
                 actor.selected = false;
             }
 
             if (actor.name == name) {
                 actor[prop] = value;
                 console.log("actor " + actor.name + " property: '" + prop + "' is now " + actor[prop]);
-            }
         }
     }
 }

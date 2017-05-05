@@ -36,6 +36,7 @@ export class BabylonRenderer implements RendererInstance {
         this._camera.attachControl(this._canvas, false);
     }
 
+    // TODO: make this method more generic, so it can standalone
     createActor(actors: Array<Actor>) {
         console.log("new babylonjs actor created!");
         let ground = BABYLON.MeshBuilder.CreateGround('ground1',
@@ -86,6 +87,7 @@ export class BabylonRenderer implements RendererInstance {
         this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this._scene);
     }
 
+    //TODO: refactor this event, outside this class
     addEvent(){
         // add input event for user paddle
         this._canvas.addEventListener("click", ev=>{
@@ -100,7 +102,7 @@ export class BabylonRenderer implements RendererInstance {
 
     highlightActor(actor: Actor){
         let meshToHighlight = this._scene.getMeshByName(actor.name);
-        console.log("babylon mesh selected: " + meshToHighlight.name);
+        // console.log("babylon mesh selected: " + meshToHighlight.name);
         meshToHighlight.outlineWidth = .1;
         meshToHighlight.outlineColor = BABYLON.Color3.Black();
         meshToHighlight.renderOutline = true;

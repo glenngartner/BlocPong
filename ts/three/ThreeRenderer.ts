@@ -30,6 +30,7 @@ export class ThreeRenderer implements RendererInstance {
 
     createBackground(){};
 
+    //TODO: make this method more generic, so it can stand alone.
     createActor(actor: Array<Actor>) {
         console.log("threejs actor created!");
 
@@ -63,19 +64,43 @@ export class ThreeRenderer implements RendererInstance {
         console.log("threejs sunlight created!");
     };
 
+    //TODO: refactor this event, to exist outside this class
     addEvent(){
-        this._canvas.addEventListener("click", ev=>{
+        this._canvas.addEventListener("click", (e)=>{
             console.log("threejs canvas has been clicked");
+            let rayCaster = new THREE.Raycaster();
+            let mouseX = e.pageX;
+            let mouseY = e.pageY;
+
+            // crazy math to account for the offset of the canvas on teh page :)
+            let mouse2D = new THREE.Vector2(
+                ( (e.clientX - this._renderer.domElement.offsetLeft) / this._renderer.domElement.clientWidth) * 2 - 1,
+                -( ( e.clientY - this._renderer.domElement.offsetTop ) / this._renderer.domElement.clientHeight ) * 2 + 1);
+            rayCaster.setFromCamera(mouse2D, this._camera);
+
+            let intersects = rayCaster.intersectObjects(this._scene.children);
+            console.log(intersects);
+            if (intersects.length > 0 ){
+                let selectedObject = intersects[0].object;
+               console.log("threeJS actor selected: " + selectedObject.name);
+               this.actorManager.changeActorPropertyValue(intersects[0].object.name, "selected", true);
+            } else {
+                console.log("nothing was hit, apparently");
+            }
+
         })
     };
 
     highlightActor(actor:Actor){
-        console.log("threejs actor should be highlighted now");
-        let outline = new THREE.OutlineEffect( this._renderer, {defaultThickNess: 0.01, defaultColor: new THREE.Color( 0x888888 ),
-        defaultAlpha: 0.8, defaultKeepAlive: true } );
+        let meshToHighlight = this._scene.getObjectByName(actor.name);
+        // console.log("threejs mesh selected: " + this._scene.getObjectByName(actor.name).name);
+        meshToHighlight.getObjectByName("outline").visible = true;
     };
 
-    removeHighlight(actor:Actor){};
+    removeHighlight(actor:Actor){
+        let meshToRemoveHighlight = this._scene.getObjectByName(actor.name);
+        meshToRemoveHighlight.getObjectByName("outline").visible = false;
+    };
 
     checkActorState=()=>{
         // console.log("threejs is constantly checking actor state");

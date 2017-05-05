@@ -10,15 +10,29 @@ export class Mesh {
     buildMesh(actors: Array<Actor>) {
         for (let actor of actors) {
             let geo: THREE.Geometry;
+            let geoOutline: THREE.Geometry;
             if (actor.type == "box") {
                 geo = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
+                geoOutline = new THREE.BoxGeometry(actor.scale.z, actor.scale.y, actor.scale.x);
             } else if (actor.type == "sphere"){
                 geo = new THREE.SphereGeometry(actor.scale.x/2, 16, 16);
+                geoOutline = new THREE.SphereGeometry(actor.scale.x/2, 16, 16);
             }
             let mat = this.buildMaterial(actor.color);
             let mesh = new THREE.Mesh(geo, mat);
+
+            // create outline mesh
+            //TODO: remove this outline creation stuff, and find a post processing way to do this
+            let matOutline = new THREE.MeshBasicMaterial({color: 0x000000, side:THREE.BackSide});
+            let outlineMesh = new THREE.Mesh(geoOutline, matOutline);
+            outlineMesh.scale.multiplyScalar(1.15);
+            outlineMesh.name = "outline";
+
+            mesh.name = actor.name;
             this.setPosition(mesh, actor.location);
             this.scene.add(mesh);
+            mesh.add(outlineMesh);
+            outlineMesh.visible = false;
         }
     }
 
