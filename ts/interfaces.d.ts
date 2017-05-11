@@ -48,7 +48,7 @@ export interface RendererInstance extends Renderer {
     _light;
     highlightActor(actor:Actor);
     removeHighlight(actor:Actor);
-    checkActorState();
+    checkActorState(prop?: string, value?: string | number | boolean, trueFunc?: Function, falseFunc?: Function);
 }
 
 export interface ActorEventInterface {

@@ -14,7 +14,7 @@ export class BabylonRenderer implements RendererInstance {
     _light: BABYLON.Light;
     _type: string = "babylonjs";
 
-    constructor(private actorManager: ActorManager){
+    constructor(private actorManager: ActorManager) {
     }
 
     createScene() {
@@ -55,9 +55,9 @@ export class BabylonRenderer implements RendererInstance {
                 mesh = BABYLON.MeshBuilder.CreateBox(
                     actor.name,
                     {
-                    width: actor.scale.x,
-                    height: actor.scale.y,
-                    depth: actor.scale.z
+                        width: actor.scale.x,
+                        height: actor.scale.y,
+                        depth: actor.scale.z
                     }, this._scene);
             } else if (actor.type == "sphere") {
                 mesh = BABYLON.MeshBuilder.CreateSphere(
@@ -91,12 +91,12 @@ export class BabylonRenderer implements RendererInstance {
     }
 
     //TODO: refactor this event, outside this class
-    addEvent(){
+    addEvent() {
         let eventManager = new ActorEvent(this._scene, this._canvas, this.actorManager);
         eventManager.makeSelectable();
     };
 
-    highlightActor(actor: Actor){
+    highlightActor=(actor: Actor)=>{
         let meshToHighlight = this._scene.getMeshByName(actor.name);
         // console.log("babylon mesh selected: " + meshToHighlight.name);
         meshToHighlight.outlineWidth = .1;
@@ -105,24 +105,20 @@ export class BabylonRenderer implements RendererInstance {
 
     }
 
-    removeHighlight(actor: Actor){
+    removeHighlight=(actor: Actor)=>{
         let meshToRemoveHighlight = this._scene.getMeshByName(actor.name);
         meshToRemoveHighlight.renderOutline = false;
     }
 
-    checkActorState(prop: string, value: string | number | boolean, trueFunc: Function, falseFunc: Function){
+    checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
 
         let actorList = this.actorManager.getActors;
-        // let property: string = "selected";
 
-        // identify the selected actor, per the generic renderer actor list
-        for (let actor of actorList){
-            if (actor[prop] == value){
-                this.highlightActor(actor);
-                // trueFunc.apply(actor);
+        for (let actor of actorList) {
+            if (actor[prop] == value) {
+                trueFunc(actor);
             } else {
-                this.removeHighlight(actor);
-                // falseFunc(actor);
+                falseFunc(actor);
             }
         }
     }

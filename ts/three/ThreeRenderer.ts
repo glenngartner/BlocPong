@@ -98,6 +98,20 @@ export class ThreeRenderer implements RendererInstance {
         }
     };
 
+    // TODO: make this function usable, generic, and escape the one above (requires rework of render class
+    // checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
+    //
+    //     let actorList = this.actorManager.getActors;
+    //
+    //     for (let actor of actorList) {
+    //         if (actor[prop] == value) {
+    //             trueFunc(actor);
+    //         } else {
+    //             falseFunc(actor);
+    //         }
+    //     }
+    // }
+
     render() {
         console.log("threejs renderer started");
         this._renderer = new Render(this._scene, this._camera);
