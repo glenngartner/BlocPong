@@ -1,16 +1,17 @@
 import {ActorManager} from "../core/ActorManager";
 import {Render} from "./Render";
+import {ActorEventInterface} from "../interfaces";
 /**
  * Created by glenn on 5/10/2017.
  */
 
-export class ActorEvent {
+export class ActorEvent implements ActorEventInterface {
 
-    constructor(private _scene: THREE.Scene,
-                private _canvas: HTMLCanvasElement,
-                private _camera: THREE.Camera,
-                private _renderer: Render,
-                private actorManager: ActorManager) {
+    constructor(public _scene: THREE.Scene,
+                public _canvas: HTMLCanvasElement,
+                public _camera: THREE.Camera,
+                public _renderer: Render,
+                public actorManager: ActorManager) {
 
     }
 

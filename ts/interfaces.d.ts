@@ -1,3 +1,6 @@
+import {Render} from "./three/Render";
+import {ActorManager} from "./core/ActorManager";
+
 interface rendererConfig {
     three: boolean,
     babylon: boolean
@@ -46,4 +49,13 @@ interface RendererInstance extends Renderer {
     highlightActor(actor:Actor);
     removeHighlight(actor:Actor);
     checkActorState();
+}
+
+interface ActorEventInterface {
+    _scene: THREE.Scene | BABYLON.Scene;
+    _canvas: HTMLCanvasElement;
+    _camera: THREE.Camera | BABYLON.Camera;
+    _renderer?: Render;
+    actorManager: ActorManager;
+    makeSelectable();
 }
