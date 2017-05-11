@@ -54,7 +54,7 @@ export interface RendererInstance extends Renderer {
 export interface ActorEventInterface {
     _scene: THREE.Scene | BABYLON.Scene;
     _canvas: HTMLCanvasElement;
-    _camera: THREE.Camera | BABYLON.Camera;
+    _camera?: THREE.Camera | BABYLON.Camera;
     _renderer?: Render;
     actorManager: ActorManager;
     makeSelectable();

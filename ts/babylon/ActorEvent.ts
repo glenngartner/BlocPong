@@ -8,7 +8,6 @@ export class ActorEvent implements ActorEventInterface {
 
     constructor(public _scene: BABYLON.Scene,
                 public _canvas: HTMLCanvasElement,
-                public _camera: BABYLON.Camera,
                 public actorManager: ActorManager) {
     }
 

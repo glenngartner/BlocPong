@@ -92,7 +92,7 @@ export class BabylonRenderer implements RendererInstance {
 
     //TODO: refactor this event, outside this class
     addEvent(){
-        let eventManager = new ActorEvent(this._scene, this._canvas, this._camera, this.actorManager);
+        let eventManager = new ActorEvent(this._scene, this._canvas, this.actorManager);
         eventManager.makeSelectable();
     };
 
