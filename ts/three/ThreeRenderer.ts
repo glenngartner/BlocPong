@@ -3,6 +3,8 @@ import {Render} from "./Render";
 import {Mesh} from "./Mesh";
 import {ActorManager} from "../core/ActorManager";
 import {ActorEvent} from "./ActorEvent";
+import {RendererInstance} from "../interfaces";
+import {Actor} from "../interfaces";
 
 
 export class ThreeRenderer implements RendererInstance {

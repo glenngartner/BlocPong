@@ -1,18 +1,18 @@
 import {Render} from "./three/Render";
 import {ActorManager} from "./core/ActorManager";
 
-interface rendererConfig {
+export interface rendererConfig {
     three: boolean,
     babylon: boolean
 }
 
-interface vector3 {
+export interface vector3 {
     x: number,
     y: number,
     z: number
 }
 
-interface Actor {
+export interface Actor {
     name?: string,
     selected?: boolean,
     type?: string,
@@ -30,7 +30,7 @@ interface Actor {
     envTex?: string
 }
 
-interface Renderer {
+export interface Renderer {
     _type: string;
     createScene();
     createCamera();
@@ -42,7 +42,7 @@ interface Renderer {
     render();
 }
 
-interface RendererInstance extends Renderer {
+export interface RendererInstance extends Renderer {
     _scene;
     _camera;
     _light;
@@ -51,7 +51,7 @@ interface RendererInstance extends Renderer {
     checkActorState();
 }
 
-interface ActorEventInterface {
+export interface ActorEventInterface {
     _scene: THREE.Scene | BABYLON.Scene;
     _canvas: HTMLCanvasElement;
     _camera: THREE.Camera | BABYLON.Camera;

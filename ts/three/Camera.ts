@@ -1,4 +1,5 @@
 
+import {vector3} from "../interfaces";
 export class Camera extends THREE.PerspectiveCamera {
 
     constructor(

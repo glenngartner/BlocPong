@@ -2,6 +2,7 @@ import {renderers} from "./renderer_config";
 import {BabylonRenderer} from "../babylon/BabylonRenderer";
 import {ThreeRenderer} from "../three/ThreeRenderer";
 import {ActorManager} from "./ActorManager";
+import {Actor, Renderer} from "../interfaces";
 
 export class GenericRenderer implements Renderer {
 

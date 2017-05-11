@@ -1,6 +1,9 @@
 import {ActorManager} from "../core/ActorManager";
 import {GenericRenderer} from "../core/GenericRenderer";
 import {renderers} from "../core/renderer_config";
+import {RendererInstance} from "../interfaces";
+import {Actor} from "../interfaces";
+import {ActorEvent} from "./ActorEvent";
 
 export class BabylonRenderer implements RendererInstance {
 
@@ -89,15 +92,8 @@ export class BabylonRenderer implements RendererInstance {
 
     //TODO: refactor this event, outside this class
     addEvent(){
-        // add input event for user paddle
-        this._canvas.addEventListener("click", ev=>{
-            let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
-
-            if (pickResult){
-                console.log("babylon scene picked!");
-                this.actorManager.changeActorPropertyValue(pickResult.pickedMesh.name, "selected", true);
-            }
-        })
+        let eventManager = new ActorEvent(this._scene, this._canvas, this._camera, this.actorManager);
+        eventManager.makeSelectable();
     };
 
     highlightActor(actor: Actor){
@@ -117,10 +113,11 @@ export class BabylonRenderer implements RendererInstance {
     checkActorState(){
 
         let actorList = this.actorManager.getActors;
+        let property: string = "selected";
 
         // identify the selected actor, per the generic renderer actor list
         for (let actor of actorList){
-            if (actor.selected == true){
+            if (actor[property] == true){
                 this.highlightActor(actor);
             } else {
                 this.removeHighlight(actor);

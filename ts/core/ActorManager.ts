@@ -1,3 +1,4 @@
+import {Actor, vector3} from "../interfaces";
 /**
  * Created by glenn on 5/4/2017.
  */

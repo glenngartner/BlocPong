@@ -1,4 +1,5 @@
 
+import {vector3} from "../interfaces";
 export class PongLight extends THREE.PointLight {
 
     constructor(

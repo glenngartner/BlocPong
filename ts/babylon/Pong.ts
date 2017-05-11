@@ -1,4 +1,5 @@
 import {Start} from "../core/start";
+import {Actor} from "../interfaces";
 
 export class Pong {
 

@@ -1,6 +1,8 @@
 import {ActorBuilder} from "./ActorBuilder";
 import { GenericRenderer } from "./GenericRenderer";
 import {ActorManager} from "./ActorManager";
+import {Actor, Renderer} from "../interfaces";
+
 
 export class Start {
 

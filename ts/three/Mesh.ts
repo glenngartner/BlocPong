@@ -1,3 +1,4 @@
+import {Actor, vector3} from "../interfaces";
 export class Mesh {
 
     private mesh: THREE.Mesh;

@@ -9,6 +9,7 @@ import {Camera} from "./Camera";
 import {Render} from "./Render";
 import {PongLight} from "./PongLight";
 import {Background} from "./Background";
+import {Actor} from "../interfaces";
 
 export class Pong {
 

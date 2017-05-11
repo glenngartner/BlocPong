@@ -1,5 +1,6 @@
 
 import {ActorManager} from "./ActorManager";
+import {Actor, vector3} from "../interfaces";
 /**
  * Created by glenn on 4/12/2017.
  */
