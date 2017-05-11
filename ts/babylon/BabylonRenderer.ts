@@ -110,17 +110,19 @@ export class BabylonRenderer implements RendererInstance {
         meshToRemoveHighlight.renderOutline = false;
     }
 
-    checkActorState(){
+    checkActorState(prop: string, value: string | number | boolean, trueFunc: Function, falseFunc: Function){
 
         let actorList = this.actorManager.getActors;
-        let property: string = "selected";
+        // let property: string = "selected";
 
         // identify the selected actor, per the generic renderer actor list
         for (let actor of actorList){
-            if (actor[property] == true){
+            if (actor[prop] == value){
                 this.highlightActor(actor);
+                // trueFunc.apply(actor);
             } else {
                 this.removeHighlight(actor);
+                // falseFunc(actor);
             }
         }
     }
@@ -129,7 +131,7 @@ export class BabylonRenderer implements RendererInstance {
         this._engine.runRenderLoop(() => {
             this._scene.render();
 
-            this.checkActorState();
+            this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
 
         });
 
