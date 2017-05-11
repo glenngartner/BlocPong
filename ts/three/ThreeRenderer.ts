@@ -2,6 +2,7 @@ import {Camera} from "./Camera";
 import {Render} from "./Render";
 import {Mesh} from "./Mesh";
 import {ActorManager} from "../core/ActorManager";
+import {ActorEvent} from "./ActorEvent";
 
 
 export class ThreeRenderer implements RendererInstance {
@@ -66,29 +67,8 @@ export class ThreeRenderer implements RendererInstance {
 
     //TODO: refactor this event, to exist outside this class
     addEvent(){
-        this._canvas.addEventListener("click", (e)=>{
-            console.log("threejs canvas has been clicked");
-            let rayCaster = new THREE.Raycaster();
-            let mouseX = e.pageX;
-            let mouseY = e.pageY;
-
-            // crazy math to account for the offset of the canvas on teh page :)
-            let mouse2D = new THREE.Vector2(
-                ( (e.clientX - this._renderer.domElement.offsetLeft) / this._renderer.domElement.clientWidth) * 2 - 1,
-                -( ( e.clientY - this._renderer.domElement.offsetTop ) / this._renderer.domElement.clientHeight ) * 2 + 1);
-            rayCaster.setFromCamera(mouse2D, this._camera);
-
-            let intersects = rayCaster.intersectObjects(this._scene.children);
-            console.log(intersects);
-            if (intersects.length > 0 ){
-                let selectedObject = intersects[0].object;
-               console.log("threeJS actor selected: " + selectedObject.name);
-               this.actorManager.changeActorPropertyValue(intersects[0].object.name, "selected", true);
-            } else {
-                console.log("nothing was hit, apparently");
-            }
-
-        })
+        let eventManager = new ActorEvent(this._scene, this._canvas, this._camera, this._renderer, this.actorManager);
+        eventManager.makeSelectable();
     };
 
     highlightActor(actor:Actor){

@@ -21,7 +21,7 @@ export class Start {
         this.renderer.createBackground();
         this.renderer.createActor([paddle1, paddle2, ball]);
         this.renderer.createDirectionalLight();
-        this.renderer.addEvent();
         this.renderer.render();
+        this.renderer.addEvent();
     }
 }
