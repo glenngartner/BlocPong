@@ -12,6 +12,7 @@ export class ActorEvent implements ActorEventInterface {
     mouseMoveX: number;
     mouseMoveY: number;
     pickedPoint: THREE.Vector3;
+    clicked:boolean = false;
 
     constructor(public _scene: THREE.Scene,
                 public _canvas: HTMLCanvasElement,
@@ -21,8 +22,9 @@ export class ActorEvent implements ActorEventInterface {
 
     }
 
-    makeSelectable =()=> {
+    makeSelectable() {
         this._canvas.addEventListener("click", (e) => {
+            this.clicked = true;
             console.log("threejs canvas has been clicked");
             let rayCaster = new THREE.Raycaster();
             this.mouseDownX = e.pageX;
@@ -41,14 +43,18 @@ export class ActorEvent implements ActorEventInterface {
                 this.pickedPoint = intersects[0].point;
                 console.log("threeJS actor selected: " + selectedObject.name);
                 this.actorManager.changeActorPropertyValue(intersects[0].object.name, "selected", true);
+                if(this.actorManager.actorPropertyValue(selectedObject.name, "draggable") == true){
+                    this.actorManager.changeActorPropertyValue(selectedObject.name, "isDragging", true);
+                }
             } else {
                 console.log("nothing was hit, apparently");
             }
 
         })
-        this._canvas.addEventListener("mousemove", (e)=>{
-            this.mouseMoveX = e.pageX;
-            this.mouseMoveY = e.pageY;
-        })
+        // this._canvas.addEventListener("mousemove", (e)=>{
+        //     this.mouseMoveX = e.pageX;
+        //     this.mouseMoveY = e.pageY;
+        //     console.log("the three actor event sees the mouse moving over the threeJS renderer");
+        // })
     }
 }

@@ -25,8 +25,7 @@ export class Render extends THREE.WebGLRenderer {
         this.animate();
     }
 
-    checkActorState(prop: string, value:
-                        string
+    checkActorState(prop: string, value: string
                         | number
                         | boolean, trueFunc: (actor: Actor) => void, falseFunc: Function) {
 
@@ -59,6 +58,27 @@ export class Render extends THREE.WebGLRenderer {
         // let moveAmount = mouseYdelta * deltaFactor;
         // actor.location.x += moveAmount;
         // console.log("three actor event picked point: " + this.actorEvent.pickedPoint);
+        // if (this.actorEvent.clicked) {
+        //     this._canvas.addEventListener("mousemove", (e) => {
+        //
+        //         let rayCaster = new THREE.Raycaster();
+        //
+        //         // crazy math to account for the offset of the canvas on the page :)
+        //         let mouse2D = new THREE.Vector2(
+        //             ( (e.clientX - this.domElement.offsetLeft) / this.domElement.clientWidth) * 2 - 1,
+        //             -( ( e.clientY - this.domElement.offsetTop ) / this.domElement.clientHeight ) * 2 + 1);
+        //         rayCaster.setFromCamera(mouse2D, this.camera);
+        //
+        //         let intersects = rayCaster.intersectObjects(this._scene.children);
+        //         if (intersects.length > 0) {
+        //             let selectedObject = intersects[0].object;
+        //             let intersectPoint = intersects[0].point;
+        //             actor.location.x = intersectPoint.z;
+        //         }
+        //     })
+        // }
+        // console.log("three js actor event start: " + this.actorEvent.mouseMoveY);
+
         this._scene.getObjectByName(actor.name).position.z = actor.location.x;
 
     }

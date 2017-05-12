@@ -9,6 +9,7 @@ export class ActorEvent implements ActorEventInterface {
     mouseDownX: number;
     mouseDownY: number;
     meshStartPosX: number;
+    clicked: boolean = false;
 
     constructor(public _scene: BABYLON.Scene,
                 public _canvas: HTMLCanvasElement,
@@ -17,7 +18,8 @@ export class ActorEvent implements ActorEventInterface {
     }
 
     makeSelectable() {
-        this._canvas.addEventListener("click", ev => {
+        this._canvas.addEventListener("click", (ev) => {
+            this.clicked = true;
             let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
             this.mouseDownX = this._scene.pointerX;
             this.mouseDownY = this._scene.pointerY;

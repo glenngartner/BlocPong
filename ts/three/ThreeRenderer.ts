@@ -69,12 +69,12 @@ export class ThreeRenderer implements RendererInstance {
     };
 
     //TODO: refactor this event, to exist outside this class
-    addEvent(){
+    addEvent=()=>{
         this.actorEvent = new ActorEvent(this._scene, this._canvas, this._camera, this._renderer, this.actorManager);
         this.actorEvent.makeSelectable();
     };
 
-    render() {
+    render=()=> {
         console.log("threejs renderer started");
         this._renderer = new Render(this._scene, this._camera, this.actorManager, this.actorEvent, this._canvas);
     };
