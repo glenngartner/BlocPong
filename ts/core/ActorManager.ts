@@ -24,8 +24,6 @@ export class ActorManager {
     changeActorPropertyValue(name: string | number, prop: string, value: string | boolean | vector3 | number) {
         for (let actor of this.actors) {
 
-            // console.log("actor " + actor.name + " selected = " + actor.selected);
-
             // when receiving the selected property, reset all selected values to false, reset the selections
             if (prop === "selected") {
                 actor.selected = false;
@@ -35,6 +33,12 @@ export class ActorManager {
                 actor[prop] = value;
                 console.log("actor " + actor.name + " property: '" + prop + "' is now " + actor[prop]);
             }
+        }
+    }
+
+    actorPropertyValue(name: string, prop: string){
+        for (let actor of this.actors){
+            if (actor.name == name) return actor[prop];
         }
     }
 }

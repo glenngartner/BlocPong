@@ -94,6 +94,7 @@ export class BabylonRenderer implements RendererInstance {
     addEvent() {
         let eventManager = new ActorEvent(this._scene, this._canvas, this.actorManager);
         eventManager.makeSelectable();
+        // eventManager.makeDraggable();
     };
 
     highlightActor=(actor: Actor)=>{
@@ -112,7 +113,7 @@ export class BabylonRenderer implements RendererInstance {
     startDragging=(actor:Actor)=>{
         if(actor.draggable == true){
             actor.isDragging = true;
-            this._scene.getMeshByName(actor.name).position.x += 1;
+            // this._scene.getMeshByName(actor.name).position.x += this._scene.pointerY;
         }
     }
 

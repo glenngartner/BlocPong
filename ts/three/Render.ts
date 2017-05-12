@@ -59,8 +59,6 @@ export class Render extends THREE.WebGLRenderer {
     animate = () => {
         requestAnimationFrame(this.animate);
         this.render(this._scene, this.camera);
-        // this.loopThisFunction();
-        // this.loopRenderFunctions();
         this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
         this.checkActorState("selected", true, this.startDragging, this.stopDragging);
     }
