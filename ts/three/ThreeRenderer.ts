@@ -73,49 +73,9 @@ export class ThreeRenderer implements RendererInstance {
         eventManager.makeSelectable();
     };
 
-    highlightActor(actor:Actor){
-        let meshToHighlight = this._scene.getObjectByName(actor.name);
-        // console.log("threejs mesh selected: " + this._scene.getObjectByName(actor.name).name);
-        meshToHighlight.getObjectByName("outline").visible = true;
-    };
-
-    removeHighlight(actor:Actor){
-        let meshToRemoveHighlight = this._scene.getObjectByName(actor.name);
-        meshToRemoveHighlight.getObjectByName("outline").visible = false;
-    };
-
-    checkActorState=()=>{
-        // console.log("threejs is constantly checking actor state");
-        let actorList = this.actorManager.getActors;
-
-        // identify the selected actor, per the generic renderer actor list
-        for (let actor of actorList){
-            if (actor.selected == true){
-                this.highlightActor(actor);
-            } else {
-                this.removeHighlight(actor);
-            }
-        }
-    };
-
-    // TODO: make this function usable, generic, and escape the one above (requires rework of render class
-    // checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
-    //
-    //     let actorList = this.actorManager.getActors;
-    //
-    //     for (let actor of actorList) {
-    //         if (actor[prop] == value) {
-    //             trueFunc(actor);
-    //         } else {
-    //             falseFunc(actor);
-    //         }
-    //     }
-    // }
-
     render() {
         console.log("threejs renderer started");
-        this._renderer = new Render(this._scene, this._camera);
-        this._renderer.LoopFunction = this.checkActorState;
+        this._renderer = new Render(this._scene, this._camera, this.actorManager);
     };
 
 }

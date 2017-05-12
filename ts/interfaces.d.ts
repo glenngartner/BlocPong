@@ -14,7 +14,10 @@ export interface vector3 {
 
 export interface Actor {
     name?: string,
+    selectable?: boolean,
     selected?: boolean,
+    draggable?: boolean,
+    isDragging?:boolean,
     type?: string,
     location?: vector3,
     rotation?: vector3,
@@ -43,12 +46,14 @@ export interface Renderer {
 }
 
 export interface RendererInstance extends Renderer {
-    _scene;
-    _camera;
-    _light;
-    highlightActor(actor:Actor);
-    removeHighlight(actor:Actor);
-    checkActorState(prop?: string, value?: string | number | boolean, trueFunc?: Function, falseFunc?: Function);
+    _scene: BABYLON.Scene | THREE.Scene;
+    _camera: BABYLON.Camera | THREE.Camera;
+    _light: BABYLON.Light | THREE.Light;
+    // highlightActor(actor:Actor);
+    // removeHighlight(actor:Actor);
+    // startDragging(actor:Actor);
+    // stopDragging(actor:Actor);
+    // checkActorState(prop?: string, value?: string | number | boolean, trueFunc?: Function, falseFunc?: Function);
 }
 
 export interface ActorEventInterface {

@@ -98,7 +98,6 @@ export class BabylonRenderer implements RendererInstance {
 
     highlightActor=(actor: Actor)=>{
         let meshToHighlight = this._scene.getMeshByName(actor.name);
-        // console.log("babylon mesh selected: " + meshToHighlight.name);
         meshToHighlight.outlineWidth = .1;
         meshToHighlight.outlineColor = BABYLON.Color3.Black();
         meshToHighlight.renderOutline = true;
@@ -108,6 +107,17 @@ export class BabylonRenderer implements RendererInstance {
     removeHighlight=(actor: Actor)=>{
         let meshToRemoveHighlight = this._scene.getMeshByName(actor.name);
         meshToRemoveHighlight.renderOutline = false;
+    }
+
+    startDragging=(actor:Actor)=>{
+        if(actor.draggable == true){
+            actor.isDragging = true;
+            this._scene.getMeshByName(actor.name).position.x += 1;
+        }
+    }
+
+    stopDragging=(actor:Actor)=>{
+        actor.isDragging = false;
     }
 
     checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
@@ -128,7 +138,7 @@ export class BabylonRenderer implements RendererInstance {
             this._scene.render();
 
             this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
-
+            this.checkActorState("selected", true, this.startDragging, this.stopDragging);
         });
 
 
