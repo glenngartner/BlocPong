@@ -95,7 +95,8 @@ export class BabylonRenderer implements RendererInstance {
     addEvent() {
         this.actorEvent = new ActorEvent(this._scene, this._canvas, this.actorManager, this._camera);
         this.actorEvent.makeSelectable();
-        // eventManager.makeDraggable();
+        this.actorEvent.afterSelection();
+        this.actorEvent.trackCursor();
     };
 
     highlightActor = (actor: Actor) => {
@@ -112,38 +113,14 @@ export class BabylonRenderer implements RendererInstance {
     }
 
     startDragging = (actor: Actor) => {
-        let mode = "direct";
-        if (mode == "linear" && this.actorEvent.clicked) {
-            // use a linear or smooth movement from first click point
-            let newMouseY = this._scene.pointerY;
-            let mouseYDelta = this.actorEvent.mouseDownY - newMouseY;
-            let deltaFactor = -.001;
-            let moveAmount = mouseYDelta * deltaFactor;
-            // console.log("mouse down location is: " + this.actorEvent.mouseDownY);
-            // console.log("mouse movement delta is: " + mouseYDelta);
-            actor.location.x += moveAmount;
-            // this._scene.getMeshByName(actor.name).position.x = actor.location.x;
-        } else if (mode == "direct" && this.actorEvent.clicked) {
-            // use exact mouse position
-            // console.log("mesh start pos x: " + this.actorEvent.meshStartPos.x);
-            let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
-            if (pickResult) {
-                actor.location.x = pickResult.pickedPoint.x;
-                // this._scene.getMeshByName(actor.name).position.x = actor.location.x;
-            }
-        }
-
         this._scene.getMeshByName(actor.name).position.x = actor.location.x;
-
     }
 
 
     stopDragging = (actor: Actor) => {
     }
 
-    checkActorState(prop: string, value: string
-                        | number
-                        | boolean, trueFunc: (actor: Actor) => void, falseFunc: Function) {
+    checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor: Actor) => void, falseFunc: Function) {
 
         let actorList = this.actorManager.getActors;
 

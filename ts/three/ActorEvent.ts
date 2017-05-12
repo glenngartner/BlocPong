@@ -23,7 +23,7 @@ export class ActorEvent implements ActorEventInterface {
     }
 
     makeSelectable() {
-        this._canvas.addEventListener("click", (e) => {
+        this._canvas.addEventListener("pointerdown", (e) => {
             this.clicked = true;
             console.log("threejs canvas has been clicked");
             let rayCaster = new THREE.Raycaster();

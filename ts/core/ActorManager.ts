@@ -42,4 +42,14 @@ export class ActorManager {
             if (actor.name == name) return actor[prop];
         }
     }
+
+    returnActorByName(name: string){
+        for (let actor of this.actors){
+            if (actor.name == name){
+                return actor;
+            } else {
+                console.log("you've requested an actor that doesn't exist");
+            }
+        }
+    }
 }
