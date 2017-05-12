@@ -76,7 +76,7 @@ export class ThreeRenderer implements RendererInstance {
 
     render() {
         console.log("threejs renderer started");
-        this._renderer = new Render(this._scene, this._camera, this.actorManager, this.actorEvent);
+        this._renderer = new Render(this._scene, this._camera, this.actorManager, this.actorEvent, this._canvas);
     };
 
 }

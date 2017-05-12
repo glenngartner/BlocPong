@@ -10,7 +10,8 @@ export class Render extends THREE.WebGLRenderer {
     constructor(private _scene: THREE.Scene,
                 private camera: THREE.Camera,
                 private actorManager: ActorManager,
-                private actorEvent: ActorEvent) {
+                private actorEvent: ActorEvent,
+                private _canvas: HTMLCanvasElement) {
         super({
             antialias: true,
             canvas: <HTMLCanvasElement>document.getElementById('threeCanvas')
@@ -24,7 +25,10 @@ export class Render extends THREE.WebGLRenderer {
         this.animate();
     }
 
-    checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
+    checkActorState(prop: string, value:
+                        string
+                        | number
+                        | boolean, trueFunc: (actor: Actor) => void, falseFunc: Function) {
 
         let actorList = this.actorManager.getActors;
 
@@ -37,22 +41,29 @@ export class Render extends THREE.WebGLRenderer {
         }
     }
 
-    highlightActor=(actor:Actor)=>{
+    highlightActor = (actor: Actor) => {
         let meshToHighlight = this._scene.getObjectByName(actor.name);
         meshToHighlight.getObjectByName("outline").visible = true;
     };
 
-    removeHighlight=(actor:Actor)=>{
+    removeHighlight = (actor: Actor) => {
         let meshToRemoveHighlight = this._scene.getObjectByName(actor.name);
         meshToRemoveHighlight.getObjectByName("outline").visible = false;
     };
 
-    startDragging=(actor:Actor)=>{
+    startDragging = (actor: Actor) => {
         // console.log("threeJS paddle should be dragging");
+        // console.log("three mouse Y pos: " + this.actorEvent.mouseMoveY);
+        // let mouseYdelta = this.actorEvent.mouseDownY - mouseY;
+        // let deltaFactor = .001;
+        // let moveAmount = mouseYdelta * deltaFactor;
+        // actor.location.x += moveAmount;
+        // console.log("three actor event picked point: " + this.actorEvent.pickedPoint);
+        this._scene.getObjectByName(actor.name).position.z = actor.location.x;
 
     }
 
-    stopDragging=(actor:Actor)=>{
+    stopDragging = (actor: Actor) => {
         // console.log("threeJS paddle should not be dragging");
     }
 

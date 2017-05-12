@@ -7,6 +7,12 @@ import {ActorEventInterface} from "../interfaces";
 
 export class ActorEvent implements ActorEventInterface {
 
+    mouseDownX: number;
+    mouseDownY: number;
+    mouseMoveX: number;
+    mouseMoveY: number;
+    pickedPoint: THREE.Vector3;
+
     constructor(public _scene: THREE.Scene,
                 public _canvas: HTMLCanvasElement,
                 public _camera: THREE.Camera,
@@ -15,12 +21,12 @@ export class ActorEvent implements ActorEventInterface {
 
     }
 
-    makeSelectable() {
+    makeSelectable =()=> {
         this._canvas.addEventListener("click", (e) => {
             console.log("threejs canvas has been clicked");
             let rayCaster = new THREE.Raycaster();
-            let mouseX = e.pageX;
-            let mouseY = e.pageY;
+            this.mouseDownX = e.pageX;
+            this.mouseDownY = e.pageY;
 
             // crazy math to account for the offset of the canvas on the page :)
             let mouse2D = new THREE.Vector2(
@@ -32,12 +38,17 @@ export class ActorEvent implements ActorEventInterface {
             console.log(intersects);
             if (intersects.length > 0) {
                 let selectedObject = intersects[0].object;
+                this.pickedPoint = intersects[0].point;
                 console.log("threeJS actor selected: " + selectedObject.name);
                 this.actorManager.changeActorPropertyValue(intersects[0].object.name, "selected", true);
             } else {
                 console.log("nothing was hit, apparently");
             }
 
+        })
+        this._canvas.addEventListener("mousemove", (e)=>{
+            this.mouseMoveX = e.pageX;
+            this.mouseMoveY = e.pageY;
         })
     }
 }
