@@ -15,6 +15,7 @@ export class ThreeRenderer implements RendererInstance {
     _camera: Camera;
     _light: THREE.DirectionalLight;
     _renderer: Render;
+    private actorEvent: ActorEvent;
 
     constructor(private actorManager: ActorManager){
 
@@ -69,13 +70,13 @@ export class ThreeRenderer implements RendererInstance {
 
     //TODO: refactor this event, to exist outside this class
     addEvent(){
-        let eventManager = new ActorEvent(this._scene, this._canvas, this._camera, this._renderer, this.actorManager);
-        eventManager.makeSelectable();
+        this.actorEvent = new ActorEvent(this._scene, this._canvas, this._camera, this._renderer, this.actorManager);
+        this.actorEvent.makeSelectable();
     };
 
     render() {
         console.log("threejs renderer started");
-        this._renderer = new Render(this._scene, this._camera, this.actorManager);
+        this._renderer = new Render(this._scene, this._camera, this.actorManager, this.actorEvent);
     };
 
 }

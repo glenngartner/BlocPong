@@ -27,6 +27,7 @@ export class ActorManager {
             // when receiving the selected property, reset all selected values to false, reset the selections
             if (prop === "selected") {
                 actor.selected = false;
+                actor.isDragging = false;
             }
 
             if (actor.name == name) {

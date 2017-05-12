@@ -1,14 +1,16 @@
 import {ActorManager} from "../core/ActorManager";
 import {Actor} from "../interfaces";
+import {ActorEvent} from "./ActorEvent";
 /**
  * Created by glenngartner on 3/14/17.
  */
 
 export class Render extends THREE.WebGLRenderer {
 
-    constructor(public _scene: THREE.Scene,
-                public camera: THREE.Camera,
-                public actorManager: ActorManager) {
+    constructor(private _scene: THREE.Scene,
+                private camera: THREE.Camera,
+                private actorManager: ActorManager,
+                private actorEvent: ActorEvent) {
         super({
             antialias: true,
             canvas: <HTMLCanvasElement>document.getElementById('threeCanvas')
@@ -46,20 +48,18 @@ export class Render extends THREE.WebGLRenderer {
     };
 
     startDragging=(actor:Actor)=>{
-        if(actor.draggable == true){
-            actor.isDragging = true;
-            this._scene.getObjectByName(actor.name).position.z += 1;
-        }
+        // console.log("threeJS paddle should be dragging");
+
     }
 
     stopDragging=(actor:Actor)=>{
-        actor.isDragging = false;
+        // console.log("threeJS paddle should not be dragging");
     }
 
     animate = () => {
         requestAnimationFrame(this.animate);
         this.render(this._scene, this.camera);
         this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
-        this.checkActorState("selected", true, this.startDragging, this.stopDragging);
+        this.checkActorState("isDragging", true, this.startDragging, this.stopDragging);
     }
 }

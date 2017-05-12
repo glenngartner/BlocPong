@@ -13,6 +13,7 @@ export class BabylonRenderer implements RendererInstance {
     _camera: BABYLON.ArcRotateCamera;
     _light: BABYLON.Light;
     _type: string = "babylonjs";
+    private actorEvent: ActorEvent;
 
     constructor(private actorManager: ActorManager) {
     }
@@ -92,8 +93,8 @@ export class BabylonRenderer implements RendererInstance {
 
     //TODO: refactor this event, outside this class
     addEvent() {
-        let eventManager = new ActorEvent(this._scene, this._canvas, this.actorManager);
-        eventManager.makeSelectable();
+        this.actorEvent= new ActorEvent(this._scene, this._canvas, this.actorManager);
+        this.actorEvent.makeSelectable();
         // eventManager.makeDraggable();
     };
 
@@ -111,14 +112,18 @@ export class BabylonRenderer implements RendererInstance {
     }
 
     startDragging=(actor:Actor)=>{
-        if(actor.draggable == true){
-            actor.isDragging = true;
-            // this._scene.getMeshByName(actor.name).position.x += this._scene.pointerY;
-        }
+        // console.log("babylon actor should be dragging");
+        let newMouseY = this._scene.pointerY;
+        let mouseYDelta = this.actorEvent.mouseDownY - newMouseY;
+        let deltaFactor = -.001;
+        let moveAmount = mouseYDelta * deltaFactor;
+        // console.log("mouse down location is: " + this.actorEvent.mouseDownY);
+        // console.log("mouse movement delta is: " + mouseYDelta);
+        this._scene.getMeshByName(actor.name).position.x += moveAmount;
     }
 
+
     stopDragging=(actor:Actor)=>{
-        actor.isDragging = false;
     }
 
     checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor:Actor)=>void, falseFunc: Function) {
@@ -139,7 +144,7 @@ export class BabylonRenderer implements RendererInstance {
             this._scene.render();
 
             this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
-            this.checkActorState("selected", true, this.startDragging, this.stopDragging);
+            this.checkActorState("isDragging", true, this.startDragging, this.stopDragging);
         });
 
 
