@@ -41,9 +41,19 @@ export class ActorEvent implements ActorEventInterface {
                     this.selectedMesh = pickResult.pickedMesh;
 
                     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
+
+                    // if the selected mesh is draggable, start dragging it, as well
                     if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
                         this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
                         this._scene.activeCamera.detachControl(this._canvas);
+
+                        // let mouseOverPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
+                        // if (mouseOverPoint) {
+                        //     this.mouseOverPoint = mouseOverPoint.pickedPoint;
+                        //     this.overMesh = mouseOverPoint.pickedMesh;
+                        // }
+                        //
+                        // this.changeGenericMeshLocationValues();
                     }
 
                 }
@@ -57,6 +67,10 @@ export class ActorEvent implements ActorEventInterface {
             // if(this.actorManager.actorPropertyValue(this.selectedMesh.name, "isDragging")){
             //     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
             // }
+
+            // if(this.selectedMesh){
+            //     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
+            // }
             this._scene.activeCamera.attachControl(this._canvas);
         })
     }
@@ -66,7 +80,13 @@ export class ActorEvent implements ActorEventInterface {
         this._canvas.addEventListener("mousemove", (ev) => {
 
             let mouseOverPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
-            if (mouseOverPoint) {
+
+            //check for the presence of an intersection, but also that the mouse is over a mesh
+            // if the mouse is over the background, the changeActorProperty() will not have a position for the cursor
+            // in 3D space, and will return an error when told to move this actor to the cursor location
+            // over an infinite background
+
+            if (mouseOverPoint && mouseOverPoint.pickedMesh) {
                 this.mouseOverPoint = mouseOverPoint.pickedPoint;
                 this.overMesh = mouseOverPoint.pickedMesh;
             }
@@ -99,7 +119,7 @@ export class ActorEvent implements ActorEventInterface {
     }
 
     changeGenericMeshLocationValues() {
-        if (this.selectedMesh) {
+        // if (this.selectedMesh) {
             let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
             // this check is necessary, because some meshes may not be generated using the
             // babylon actor creation method, so they don't have the generic location property
@@ -109,7 +129,7 @@ export class ActorEvent implements ActorEventInterface {
                 genericActor.location.x = this.mouseOverPoint.x;// - this.selectedMesh.position.x;
                 genericActor.location.y = this.mouseOverPoint.y;// - this.selectedMesh.position.y;
                 genericActor.location.z = this.mouseOverPoint.z;// - this.selectedMesh.position.z;
-            }
+            // }
         }
     }
 }
