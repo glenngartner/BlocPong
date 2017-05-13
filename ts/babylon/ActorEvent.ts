@@ -28,18 +28,24 @@ export class ActorEvent implements ActorEventInterface {
             let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
             this.mouseDownX = this._scene.pointerX;
             this.mouseDownY = this._scene.pointerY;
-            if (pickResult.pickedMesh) {
-
-                this.meshStartPosX = pickResult.pickedMesh.position.x;
-            }
 
             if (pickResult) {
-                this.selectedMesh = pickResult.pickedMesh;
-                // console.log("babylon's selected mesh is: " + this.selectedMesh.name);
-                this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
-                if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
-                    this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
-                    this._scene.activeCamera.detachControl(this._canvas);
+
+                // this check is required because the pickResult may return true, but there may not always be a mesh
+                // attached to it (like clicking the background. So, an error is thrown in the case of a background click
+                // if you try to change the value of a property that doesn't exist on a pick result (like the background)
+                if (pickResult.pickedMesh) {
+
+                    this.meshStartPosX = pickResult.pickedMesh.position.x;
+
+                    this.selectedMesh = pickResult.pickedMesh;
+
+                    this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
+                    if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
+                        this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
+                        this._scene.activeCamera.detachControl(this._canvas);
+                    }
+
                 }
             }
         })
