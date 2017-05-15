@@ -8,7 +8,6 @@ export class ActorEvent implements ActorEventInterface {
 
     mouseDownX: number;
     mouseDownY: number;
-    meshStartPosX: number;
     clicked: boolean = false;
     mouseOverPoint: BABYLON.Vector3;
     selectedMesh: BABYLON.Mesh | BABYLON.AbstractMesh;
@@ -24,6 +23,8 @@ export class ActorEvent implements ActorEventInterface {
     // also changes the isDragging property for the generic actor, if the selected mesh draggable property is set to true
     makeSelectable() {
         this._canvas.addEventListener("pointerdown", (ev) => {
+            console.log("babylon scene pointer was pressed");
+
             this.clicked = true;
             let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
             this.mouseDownX = this._scene.pointerX;
@@ -36,8 +37,6 @@ export class ActorEvent implements ActorEventInterface {
                 // if you try to change the value of a property that doesn't exist on a pick result (like the background)
                 if (pickResult.pickedMesh) {
 
-                    this.meshStartPosX = pickResult.pickedMesh.position.x;
-
                     this.selectedMesh = pickResult.pickedMesh;
 
                     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
@@ -46,14 +45,6 @@ export class ActorEvent implements ActorEventInterface {
                     if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
                         this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
                         this._scene.activeCamera.detachControl(this._canvas);
-
-                        // let mouseOverPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
-                        // if (mouseOverPoint) {
-                        //     this.mouseOverPoint = mouseOverPoint.pickedPoint;
-                        //     this.overMesh = mouseOverPoint.pickedMesh;
-                        // }
-                        //
-                        // this.changeGenericMeshLocationValues();
                     }
 
                 }
@@ -68,16 +59,19 @@ export class ActorEvent implements ActorEventInterface {
             //     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
             // }
 
-            // if(this.selectedMesh){
-            //     this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
-            // }
+            if(this.selectedMesh){
+                this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
+            }
+            this.clicked = false;
             this._scene.activeCamera.attachControl(this._canvas);
         })
     }
 
     // always tracks the cursor intersect position in 3D space
     trackCursor(actor?: Actor) {
-        this._canvas.addEventListener("mousemove", (ev) => {
+        this._canvas.addEventListener("pointermove", (ev) => {
+
+                console.log("babylon pointermove is firing");
 
             let mouseOverPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
 
@@ -120,15 +114,16 @@ export class ActorEvent implements ActorEventInterface {
 
     changeGenericMeshLocationValues() {
         // if (this.selectedMesh) {
-            let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
-            // this check is necessary, because some meshes may not be generated using the
-            // babylon actor creation method, so they don't have the generic location property
-            if (genericActor.location) {
-                // let xDelta = Math.abs(this.mouseOverPoint.x - this.selectedMesh.position.x);
+        let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
 
-                genericActor.location.x = this.mouseOverPoint.x;// - this.selectedMesh.position.x;
-                genericActor.location.y = this.mouseOverPoint.y;// - this.selectedMesh.position.y;
-                genericActor.location.z = this.mouseOverPoint.z;// - this.selectedMesh.position.z;
+        // this check is necessary, because some meshes may not be generated using the
+        // babylon actor creation method, so they don't have the generic location property
+        if (genericActor.location) {
+            // let xDelta = Math.abs(this.mouseOverPoint.x - this.selectedMesh.position.x);
+
+            genericActor.location.x = this.mouseOverPoint.x;// - this.selectedMesh.position.x;
+            genericActor.location.y = this.mouseOverPoint.y;// - this.selectedMesh.position.y;
+            genericActor.location.z = this.mouseOverPoint.z;// - this.selectedMesh.position.z;
             // }
         }
     }
