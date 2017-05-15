@@ -116,11 +116,11 @@ export class BabylonRenderer implements RendererInstance {
         this._scene.getMeshByName(actor.name).position.x = actor.location.x;
     }
 
-
-    stopDragging = (actor: Actor) => {
-    }
-
-    checkActorState(prop: string, value: string | number | boolean, trueFunc: (actor: Actor) => void, falseFunc: Function) {
+    checkActorState(prop: string, value: string
+                        | number
+                        | boolean,
+                    trueFunc: (actor: Actor) => void,
+                    falseFunc?: Function) {
 
         let actorList = this.actorManager.getActors;
 
@@ -128,17 +128,19 @@ export class BabylonRenderer implements RendererInstance {
             if (actor[prop] == value) {
                 trueFunc(actor);
             } else {
-                falseFunc(actor);
+                if (falseFunc) {
+                    falseFunc(actor);
+                }
             }
         }
     }
 
-    render=()=> {
+    render = () => {
         this._engine.runRenderLoop(() => {
             this._scene.render();
 
             this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
-            this.checkActorState("isDragging", true, this.startDragging, this.stopDragging);
+            this.checkActorState("isDragging", true, this.startDragging);
         });
 
 
