@@ -74,16 +74,16 @@ export class ActorEvent implements ActorEventInterface {
     trackCursor(actor?: Actor) {
         this._canvas.addEventListener("pointermove", (ev) => {
 
-            let mouseOver3DPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
+            let pickedPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
 
             //check for the presence of an intersection, but also that the mouse is over a mesh
             // if the mouse is over the background, the changeActorProperty() will not have a position for the cursor
             // in 3D space, and will return an error when told to move this actor to the cursor location
             // over an infinite background
 
-            if (mouseOver3DPoint && mouseOver3DPoint.pickedMesh) {
-                this.mouseOver3DPoint = mouseOver3DPoint.pickedPoint;
-                this.overMesh = mouseOver3DPoint.pickedMesh;
+            if (pickedPoint && pickedPoint.pickedMesh) {
+                this.mouseOver3DPoint = pickedPoint.pickedPoint;
+                this.overMesh = pickedPoint.pickedMesh;
             }
             // since this updates every mouseMove frame, and an object may not have been selected
             // yet, make sure there's a selected mesh before setting its property value (or you'll

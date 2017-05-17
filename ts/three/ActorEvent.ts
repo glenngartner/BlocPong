@@ -13,7 +13,7 @@ export class ActorEvent implements ActorEventInterface {
     clicked: boolean = false;
     mouseOver3DPoint: THREE.Vector3;
     selectedMesh: THREE.Mesh | THREE.Object3D;
-    overMesh: THREE.Mesh;
+    overMesh: THREE.Mesh | THREE.Object3D;
     pickedPoint: THREE.Vector3;
     deltaPosition: THREE.Vector3;
 
@@ -44,6 +44,7 @@ export class ActorEvent implements ActorEventInterface {
             if (intersects.length > 0) {
                 this.selectedMesh = intersects[0].object;
                 this.pickedPoint = intersects[0].point;
+                this.deltaPosition = this.mouseOver3DPoint.sub(this.selectedMesh.position);
                 console.log("threeJS actor selected: " + this.selectedMesh.name);
                 this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
                 if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable") == true) {
@@ -75,5 +76,72 @@ export class ActorEvent implements ActorEventInterface {
         })
     }
 
-    K
+    trackCursor(){
+        this._canvas.addEventListener("pointermove", (e) => {
+
+            let rayCaster = new THREE.Raycaster();
+
+            let mouse2D = new THREE.Vector2(
+                ( (e.clientX - this._renderer.domElement.offsetLeft) / this._renderer.domElement.clientWidth) * 2 - 1,
+                -( ( e.clientY - this._renderer.domElement.offsetTop ) / this._renderer.domElement.clientHeight ) * 2 + 1);
+
+            rayCaster.setFromCamera(mouse2D, this._camera);
+
+            let intersects = rayCaster.intersectObjects(this._scene.children);
+
+            //check for the presence of an intersection, but also that the mouse is over a mesh
+            // if the mouse is over the background, the changeActorProperty() will not have a position for the cursor
+            // in 3D space, and will return an error when told to move this actor to the cursor location
+            // over an infinite background
+
+            if (intersects.length > 0 && intersects[0].object) {
+
+                this.mouseOver3DPoint = intersects[0].point;
+                this.overMesh = intersects[0].object;
+                console.log("three mouse 3D point is: " + this.mouseOver3DPoint);
+            }
+
+            // since this updates every mouseMove frame, and an object may not have been selected
+            // yet, make sure there's a selected mesh before setting its property value (or you'll
+            // throw an error
+
+            if (this.selectedMesh) {
+                if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
+                    this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
+                    this.changeGenericMeshLocationValues();
+                }
+            }
+
+            // let mode = "direct";
+            // if (mode == "linear" && this.clicked) {
+            //     // use a linear or smooth movement from first click point
+            //     let newMouseY = this._scene.pointerY;
+            //     let mouseYDelta = this.mouseDownY - newMouseY;
+            //     let deltaFactor = -.001;
+            //     let moveAmount = mouseYDelta * deltaFactor;
+            //     actor.location.x += moveAmount;
+            // } else if (mode == "direct" && this.clicked) {
+            //     // use exact mouse position
+            //     let pickResult = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
+            //     if (pickResult) {
+            //         actor.location.x = pickResult.pickedPoint.x;
+            //     }
+            // }
+        })
+    }
+    changeGenericMeshLocationValues() {
+        // if (this.selectedMesh) {
+        let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
+
+        // this check is necessary, because some meshes may not be generated using the
+        // babylon actor creation method, so they don't have the generic location property
+        if (genericActor.location) {
+
+            genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.x;
+            genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
+            genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.z;
+            // }
+        }
+    }
+
 }
