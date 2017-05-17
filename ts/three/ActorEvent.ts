@@ -1,6 +1,7 @@
 import {ActorManager} from "../core/ActorManager";
 import {Render} from "./Render";
 import {ActorEventInterface} from "../interfaces";
+import {Camera} from "./Camera";
 /**
  * Created by glenn on 5/10/2017.
  */
@@ -9,14 +10,16 @@ export class ActorEvent implements ActorEventInterface {
 
     mouseDownX: number;
     mouseDownY: number;
-    mouseMoveX: number;
-    mouseMoveY: number;
+    clicked: boolean = false;
+    mouseOver3DPoint: THREE.Vector3;
+    selectedMesh: THREE.Mesh | THREE.Object3D;
+    overMesh: THREE.Mesh;
     pickedPoint: THREE.Vector3;
-    clicked:boolean = false;
+    deltaPosition: THREE.Vector3;
 
     constructor(public _scene: THREE.Scene,
                 public _canvas: HTMLCanvasElement,
-                public _camera: THREE.Camera,
+                public _camera: Camera,
                 public _renderer: Render,
                 public actorManager: ActorManager) {
 
@@ -37,14 +40,14 @@ export class ActorEvent implements ActorEventInterface {
             rayCaster.setFromCamera(mouse2D, this._camera);
 
             let intersects = rayCaster.intersectObjects(this._scene.children);
-            console.log(intersects);
+
             if (intersects.length > 0) {
-                let selectedObject = intersects[0].object;
+                this.selectedMesh = intersects[0].object;
                 this.pickedPoint = intersects[0].point;
-                console.log("threeJS actor selected: " + selectedObject.name);
-                this.actorManager.changeActorPropertyValue(intersects[0].object.name, "selected", true);
-                if(this.actorManager.actorPropertyValue(selectedObject.name, "draggable") == true){
-                    this.actorManager.changeActorPropertyValue(selectedObject.name, "isDragging", true);
+                console.log("threeJS actor selected: " + this.selectedMesh.name);
+                this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", true);
+                if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable") == true) {
+                    this._camera.disableOrbitControls();
                 }
             } else {
                 console.log("nothing was hit, apparently");
@@ -57,4 +60,20 @@ export class ActorEvent implements ActorEventInterface {
         //     console.log("the three actor event sees the mouse moving over the threeJS renderer");
         // })
     }
+
+    afterSelection() {
+        this._canvas.addEventListener("pointerup", (ev) => {
+
+            if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
+                this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
+                this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", false);
+                this.selectedMesh = null;
+            }
+
+            this.clicked = false;
+            this._camera.enableOrbitControls();
+        })
+    }
+
+    K
 }

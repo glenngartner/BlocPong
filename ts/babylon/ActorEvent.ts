@@ -48,7 +48,6 @@ export class ActorEvent implements ActorEventInterface {
 
                     // if the selected mesh is draggable, start dragging it, as well
                     if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
-                        // this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", true);
                         this._scene.activeCamera.detachControl(this._canvas);
                     }
 

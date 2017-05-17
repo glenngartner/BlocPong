@@ -2,6 +2,8 @@
 import {vector3} from "../interfaces";
 export class Camera extends THREE.PerspectiveCamera {
 
+    controls: THREE.OrbitControls;
+
     constructor(
         public loc: vector3 = {x:0, y:40, z:0},
         public rot: vector3 = {x: -Math.PI/2, y: -Math.PI/2, z:-Math.PI/2}
@@ -22,6 +24,14 @@ export class Camera extends THREE.PerspectiveCamera {
     }
 
     setControls(){
-        let controls = new THREE.OrbitControls(this);
+        this.controls = new THREE.OrbitControls(this);
+    }
+
+    disableOrbitControls(){
+        this.controls.enabled = false;
+    }
+
+    enableOrbitControls(){
+        this.controls.enabled = true;
     }
 }

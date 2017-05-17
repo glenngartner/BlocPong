@@ -72,6 +72,7 @@ export class ThreeRenderer implements RendererInstance {
     addEvent=()=>{
         this.actorEvent = new ActorEvent(this._scene, this._canvas, this._camera, this._renderer, this.actorManager);
         this.actorEvent.makeSelectable();
+        this.actorEvent.afterSelection();
     };
 
     render=()=> {
