@@ -59,7 +59,8 @@ export class ActorEvent implements ActorEventInterface {
     afterSelection() {
         this._canvas.addEventListener("pointerup", (ev) => {
 
-            if(this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")){
+
+            if(this.selectedMesh && this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")){
                 this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
                 this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", false);
                 this.selectedMesh = null;

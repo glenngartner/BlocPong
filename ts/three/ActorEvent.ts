@@ -42,7 +42,10 @@ export class ActorEvent implements ActorEventInterface {
             let intersects = rayCaster.intersectObjects(this._scene.children);
 
             if (intersects.length > 0) {
-                this.selectedMesh = intersects[0].object;
+                if (intersects[0].object) {
+
+                    this.selectedMesh = intersects[0].object;
+                }
                 this.pickedPoint = intersects[0].point;
                 this.deltaPosition = this.mouseOver3DPoint.sub(this.selectedMesh.position);
                 console.log("threeJS actor selected: " + this.selectedMesh.name);
@@ -65,7 +68,7 @@ export class ActorEvent implements ActorEventInterface {
     afterSelection() {
         this._canvas.addEventListener("pointerup", (ev) => {
 
-            if (this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
+            if (this.selectedMesh && this.actorManager.actorPropertyValue(this.selectedMesh.name, "draggable")) {
                 this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "isDragging", false);
                 this.actorManager.changeActorPropertyValue(this.selectedMesh.name, "selected", false);
                 this.selectedMesh = null;
@@ -76,7 +79,7 @@ export class ActorEvent implements ActorEventInterface {
         })
     }
 
-    trackCursor(){
+    trackCursor() {
         this._canvas.addEventListener("pointermove", (e) => {
 
             let rayCaster = new THREE.Raycaster();
@@ -98,7 +101,6 @@ export class ActorEvent implements ActorEventInterface {
 
                 this.mouseOver3DPoint = intersects[0].point;
                 this.overMesh = intersects[0].object;
-                console.log("three mouse 3D point is: " + this.mouseOver3DPoint);
             }
 
             // since this updates every mouseMove frame, and an object may not have been selected
@@ -129,6 +131,7 @@ export class ActorEvent implements ActorEventInterface {
             // }
         })
     }
+
     changeGenericMeshLocationValues() {
         let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
 
@@ -136,9 +139,9 @@ export class ActorEvent implements ActorEventInterface {
         // babylon actor creation method, so they don't have the generic location property
         if (genericActor.location) {
 
-            genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.x;
+            genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.z;
             genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
-            genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.z;
+            genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.x;
         }
     }
 
