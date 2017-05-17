@@ -71,7 +71,7 @@ export class ActorEvent implements ActorEventInterface {
     }
 
     // always tracks the cursor intersect position in 3D space
-    trackCursor(actor?: Actor) {
+    trackCursor() {
         this._canvas.addEventListener("pointermove", (ev) => {
 
             let pickedPoint = this._scene.pick(this._scene.pointerX, this._scene.pointerY);
@@ -114,7 +114,6 @@ export class ActorEvent implements ActorEventInterface {
     }
 
     changeGenericMeshLocationValues() {
-        // if (this.selectedMesh) {
         let genericActor = this.actorManager.returnActorByName(this.selectedMesh.name);
 
         // this check is necessary, because some meshes may not be generated using the
@@ -124,7 +123,6 @@ export class ActorEvent implements ActorEventInterface {
             genericActor.location.x = this.mouseOver3DPoint.x - this.deltaPosition.x;
             genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
             genericActor.location.z = this.mouseOver3DPoint.z - this.deltaPosition.z;
-            // }
         }
     }
 }
