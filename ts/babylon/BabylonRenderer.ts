@@ -116,6 +116,12 @@ export class BabylonRenderer implements RendererInstance {
         this._scene.getMeshByName(actor.name).position.x = actor.location.x;
     }
 
+    updateMeshPosition=(actor:Actor)=>{
+        this._scene.getMeshByName(actor.name).position.x = actor.location.x;
+        this._scene.getMeshByName(actor.name).position.y = actor.location.y;
+        this._scene.getMeshByName(actor.name).position.z = actor.location.z;
+    }
+
     checkActorState(prop: string, value: string
                         | number
                         | boolean,
@@ -141,6 +147,7 @@ export class BabylonRenderer implements RendererInstance {
 
             this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
             this.checkActorState("isDragging", true, this.startDragging);
+            this.checkActorState("isRigidBody", true, this.updateMeshPosition);
         });
 
 

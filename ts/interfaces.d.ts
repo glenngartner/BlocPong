@@ -18,6 +18,7 @@ export interface Actor {
     selected?: boolean,
     draggable?: boolean,
     isDragging?:boolean,
+    isRigidBody?:boolean,
     type?: string,
     location?: vector3,
     rotation?: vector3,
