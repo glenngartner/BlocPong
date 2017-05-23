@@ -7,6 +7,7 @@ export class PhysicsWorld {
 
     world: CANNON.World;
     public static sphere: CANNON.Body;
+    paddle: CANNON.Body;
     ground: CANNON.Body;
     timeStep: number = 1.0 / 60.0;
 
@@ -17,6 +18,8 @@ export class PhysicsWorld {
 
         this.createPlane();
         this.createSphere();
+        this.createSlope();
+        this.createPaddle();
 
         this.world.solver.iterations = 3;
 
@@ -32,6 +35,21 @@ export class PhysicsWorld {
         });
         PhysicsWorld.sphere.position.set(0, 0, 10);
         this.world.addBody(PhysicsWorld.sphere);
+    }
+
+    createPaddle(){
+        let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
+        this.paddle = new CANNON.Body({mass: 0, shape: paddleShape});
+        this.paddle.position.set(0, 10, .5);
+        this.world.addBody(this.paddle);
+    }
+
+    createSlope(){
+        let slopeShape = new CANNON.Plane();
+        let slopeBody = new CANNON.Body({mass:0, shape: slopeShape});
+        slopeBody.position.set(0, 0, 5);
+        slopeBody.quaternion.setFromEuler(-Math.PI/4, 0, 0);
+        this.world.addBody(slopeBody);
     }
 
     createPlane() {
@@ -57,5 +75,8 @@ export class PhysicsWorld {
             y: PhysicsWorld.sphere.position.z,
             z: PhysicsWorld.sphere.position.y
         });
+
+        let paddle1Loc = this.actorManager.actorPropertyValue("paddle1", "location");
+        this.paddle.position.set(paddle1Loc.x, paddle1Loc.z, paddle1Loc.y);
     }
 }
