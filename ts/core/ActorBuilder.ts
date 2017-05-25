@@ -13,9 +13,13 @@ export class ActorBuilder {
     selectable: boolean = true;
     selected: boolean = false;
     draggable: boolean = false;
+    constrainToAxis: string = "";
     isDragging: boolean = false;
     isRigidBody: boolean = false;
     mass: number = 0;
+    isTracker: boolean = false;
+    trackedTargetName: string = "";
+    trackTargetAxis: string = "";
     type: string = "box";
     location: vector3 = {x: 0, y: 0, z: 0};
     rotation: vector3 = {x: 0, y: 0, z: 0};

@@ -57,9 +57,12 @@ export class Render extends THREE.WebGLRenderer {
     }
 
     updateMeshPosition = (actor: Actor) => {
-        this._scene.getObjectByName(actor.name).position.x = actor.location.z;
-        this._scene.getObjectByName(actor.name).position.y = actor.location.y;
-        this._scene.getObjectByName(actor.name).position.z = actor.location.x;
+        if (actor.constrainToAxis == "") {
+
+            this._scene.getObjectByName(actor.name).position.x = actor.location.z;
+            this._scene.getObjectByName(actor.name).position.y = actor.location.y;
+            this._scene.getObjectByName(actor.name).position.z = actor.location.x;
+        }
     }
 
     stopDragging = (actor: Actor) => {

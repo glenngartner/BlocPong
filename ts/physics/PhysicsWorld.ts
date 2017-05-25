@@ -33,23 +33,34 @@ export class PhysicsWorld {
             shape: sphereShape
         });
         PhysicsWorld.sphere.position.set(actor.location.x, actor.location.z, actor.location.y);
-        PhysicsWorld.sphere.velocity.set(/*Math.random()*/speedMult, Math.random() * speedMult, 0);
+        PhysicsWorld.sphere.velocity.set(0, speedMult, 0);
         this.world.addBody(PhysicsWorld.sphere);
+    }
+
+    createBox(actor: Actor) {
+        if (actor.name == "paddle1") {
+            this.createPaddle();
+        } else {
+            let boxShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x/2, actor.scale.z, actor.scale.y));
+            let boxBody = new CANNON.Body({mass: actor.mass, shape: boxShape});
+            boxBody.position.set(actor.location.x, actor.location.z, actor.location.y);
+            this.world.addBody(boxBody);
+        }
+    }
+
+    createPaddle() {
+        let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
+        this.paddle = new CANNON.Body({mass: 0, shape: paddleShape});
+        this.paddle.position.set(0, 10, .5);
+        this.world.addBody(this.paddle);
     }
 
     createCollisionObjects() {
         let actors = this.actorManager.getActors;
         for (let actor of actors) {
-            if (actor.isRigidBody && actor.name != "ball") {
-                let boxShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x, actor.scale.z, actor.scale.y));
-                let boxBody = new CANNON.Body({mass: actor.mass, shape: boxShape});
-                boxBody.position.set(actor.location.x, actor.location.z, actor.location.y);
-                this.world.addBody(boxBody)
-
-                if (actor.name == "paddle1") {
-                    this.paddle = boxBody;
-                }
-            } else if (actor.isRigidBody && actor.name == "ball") {
+            if (actor.isRigidBody && actor.type == "box") {
+                this.createBox(actor);
+            } else if (actor.isRigidBody && actor.type == "sphere") {
                 this.createSphere(actor)
             }
         }
@@ -67,15 +78,6 @@ export class PhysicsWorld {
 
     simLoop = () => {
         requestAnimationFrame(this.simLoop);
-        // console.log("Sphere location is: "
-        //     + "("
-        //     + PhysicsWorld.sphere.position.x
-        //     + ", "
-        //     + PhysicsWorld.sphere.position.y
-        //     + ", "
-        //     + PhysicsWorld.sphere.position.z
-        //     + ")"
-        // )
         this.world.step(this.timeStep);
         if (PhysicsWorld.sphere) {
             this.actorManager.changeActorPropertyValue("ball", "location", {
@@ -86,7 +88,7 @@ export class PhysicsWorld {
         }
 
         if (this.world.contacts.length > 1) {
-            console.log("The ball is colliding with a non-ground object");
+            console.log("The ball collided with a non-ground object");
         }
 
         let paddle1Loc = this.actorManager.actorPropertyValue("paddle1", "location");

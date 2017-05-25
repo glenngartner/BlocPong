@@ -8,10 +8,12 @@ export class GenericRenderer implements Renderer {
 
     _type: string = "generic";
     frameworks: Array<Renderer>;
+    actors: Array<Actor>;
 
     constructor(public actorManager: ActorManager, private renderers: Array<string>) {
         this.frameworks = [];
         this.selectRenderer(renderers);
+        this.actors = this.actorManager.getActors;
     }
 
     selectRenderer(renderers: Array<string>) {
@@ -88,6 +90,29 @@ export class GenericRenderer implements Renderer {
 
     render() {
         this.do("render");
+        this.animationLoop();
     };
+
+    animationLoop=()=>{
+        // this loop sniffs for generic or core game things, renderer framework agnostic,
+        // like should objects track other objects, etc
+
+        // requestAnimationFrame(this.animationLoop);
+        // for (let actor of this.actors){
+        //     if (actor.isTracker){
+        //         console.log("Paddle2 is asking for: " + actor.trackedTargetName);
+        //         let target = this.actorManager.returnActorByName(actor.trackedTargetName);
+        //         // console.log("The target name is: " + target.name);
+        //         if (actor.trackTargetAxis == "x") {
+        //             actor.location.x = target.location.x;
+        //             console.log(actor.name + " is tracking" + target.name + "'s x axis");
+        //         } else if (actor.trackTargetAxis == "y") {
+        //             actor.location.y = target.location.y;
+        //         } else if (actor.trackTargetAxis == "z"){
+        //             actor.location.z = target.location.z;
+        //         }
+        //     }
+        // }
+    }
 
 }

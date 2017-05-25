@@ -116,15 +116,18 @@ export class BabylonRenderer implements RendererInstance {
         this._scene.getMeshByName(actor.name).position.x = actor.location.x;
     }
 
-    updateMeshPosition=(actor:Actor)=>{
-        this._scene.getMeshByName(actor.name).position.x = actor.location.x;
-        this._scene.getMeshByName(actor.name).position.y = actor.location.y;
-        this._scene.getMeshByName(actor.name).position.z = actor.location.z;
+    updateMeshPosition = (actor: Actor) => {
+        if (actor.constrainToAxis == "") {
+
+            this._scene.getMeshByName(actor.name).position.x = actor.location.x;
+            this._scene.getMeshByName(actor.name).position.y = actor.location.y;
+            this._scene.getMeshByName(actor.name).position.z = actor.location.z;
+        }
     }
 
     checkActorState(prop: string, value: string
-                        | number
-                        | boolean,
+        | number
+        | boolean,
                     trueFunc: (actor: Actor) => void,
                     falseFunc?: Function) {
 
