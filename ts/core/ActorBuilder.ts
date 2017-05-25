@@ -15,6 +15,7 @@ export class ActorBuilder {
     draggable: boolean = false;
     isDragging: boolean = false;
     isRigidBody: boolean = false;
+    mass: number = 0;
     type: string = "box";
     location: vector3 = {x: 0, y: 0, z: 0};
     rotation: vector3 = {x: 0, y: 0, z: 0};
