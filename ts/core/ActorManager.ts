@@ -18,7 +18,7 @@ export class ActorManager {
 
     loadActors(newActor: Actor) {
         this.actors.push(newActor);
-        console.log(newActor.name + " loaded into Actor Manager");
+        // console.log(newActor.name + " loaded into Actor Manager");
     }
 
     changeActorPropertyValue(name: string | number, prop: string, value: string | boolean | vector3 | number) {
@@ -32,7 +32,7 @@ export class ActorManager {
 
             if (actor.name == name) {
                 actor[prop] = value;
-                console.log("actor " + actor.name + " property: '" + prop + "' is now " + actor[prop]);
+                // console.log("actor " + actor.name + " property: '" + prop + "' is now " + actor[prop]);
             }
         }
     }

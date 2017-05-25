@@ -18,7 +18,6 @@ export class PhysicsWorld {
 
         this.createPlane();
         this.createSphere();
-        this.createSlope();
         this.createPaddle();
 
         this.world.solver.iterations = 3;
@@ -27,13 +26,14 @@ export class PhysicsWorld {
     }
 
     createSphere() {
-        let mass = 5, radius = .5;
+        let mass = 2, radius = .5, speedMult = 10;
         let sphereShape = new CANNON.Sphere(radius);
         PhysicsWorld.sphere = new CANNON.Body({
             mass: mass,
             shape: sphereShape
         });
-        PhysicsWorld.sphere.position.set(0, 0, 10);
+        PhysicsWorld.sphere.position.set(0, 0, 1);
+        PhysicsWorld.sphere.velocity.set(Math.random()*speedMult, Math.random()*speedMult, 0);
         this.world.addBody(PhysicsWorld.sphere);
     }
 
@@ -75,6 +75,10 @@ export class PhysicsWorld {
             y: PhysicsWorld.sphere.position.z,
             z: PhysicsWorld.sphere.position.y
         });
+
+        if (this.world.contacts.length > 1){
+            console.log("The ball is colliding with a non-ground object");
+        }
 
         let paddle1Loc = this.actorManager.actorPropertyValue("paddle1", "location");
         this.paddle.position.set(paddle1Loc.x, paddle1Loc.z, paddle1Loc.y);

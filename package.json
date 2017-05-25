@@ -20,6 +20,7 @@
     "three": "^0.84.0"
   },
   "devDependencies": {
-    "ammo.js": "github:kripken/ammo.js"
+    "ammo.js": "github:kripken/ammo.js",
+    "typescript": "^2.3.3"
   }
 }
