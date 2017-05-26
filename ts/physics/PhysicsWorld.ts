@@ -9,6 +9,7 @@ export class PhysicsWorld {
     world: CANNON.World;
     sphere: CANNON.Body;
     paddle: CANNON.Body;
+    aiPaddle: CANNON.Body;
     ground: CANNON.Body;
     timeStep: number = 1.0 / 60.0;
     linearDamping: number = 0;
@@ -44,7 +45,9 @@ export class PhysicsWorld {
 
     createBox(actor: Actor) {
         if (actor.name == "paddle1") {
-            this.createPaddle();
+            this.createPaddle(actor);
+        } else if (actor.name == "paddle2"){
+            this.createPaddle(actor);
         } else {
             let boxShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x / 2, actor.scale.z, actor.scale.y));
             let boxBody = new CANNON.Body({mass: actor.mass, shape: boxShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
@@ -53,11 +56,22 @@ export class PhysicsWorld {
         }
     }
 
-    createPaddle() {
-        let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
-        this.paddle = new CANNON.Body({mass: 0, shape: paddleShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
-        this.paddle.position.set(0, 10, .5);
-        this.world.addBody(this.paddle);
+    createPaddle(actor:Actor) {
+        let paddleShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x / 2, actor.scale.z, actor.scale.y));
+        let paddleBody= new CANNON.Body({mass: actor.mass, shape: paddleShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
+        paddleBody.position.set(actor.location.x, actor.location.z, actor.location.y);
+        this.world.addBody(paddleBody);
+
+        if(actor.name == "paddle1"){
+            this.paddle = paddleBody;
+        } else if (actor.name == "paddle2"){
+            this.aiPaddle = paddleBody;
+        }
+
+        // let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
+        // this.paddle = new CANNON.Body({mass: 0, shape: paddleShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
+        // this.paddle.position.set(0, 10, .5);
+        // this.world.addBody(this.paddle);
     }
 
     createCollisionObjects() {
@@ -88,7 +102,7 @@ export class PhysicsWorld {
             });
         }
 
-        // check to see if a collision "contact" was made betwen rigid or static body objects
+        // check to see if a collision "contact" was made between rigid or static body objects
         // this length will always be 1, since we have a ground place, and the ball is alwasy colliding with that
         // if the length is 2, we want to know details about the second collision object
 
@@ -110,7 +124,14 @@ export class PhysicsWorld {
             // }
         }
 
+        // get the locations of the generic (headless) objects in the generic scene. as their positions change,
+        // update the positions of their corresponding static meshes. Currently, this just applies to
+        // paddle1: who's dragged by the user with a pointer / mouse
+        // paddle2: who's updated by the generic renderer, to always track the ball's position
         let paddle1Loc = this.actorManager.actorPropertyValue("paddle1", "location");
         if (this.paddle) this.paddle.position.set(paddle1Loc.x, paddle1Loc.z, paddle1Loc.y);
+
+        let paddleAILoc = this.actorManager.actorPropertyValue("paddle2", "location");
+        if (this.aiPaddle) this.aiPaddle.position.set(paddleAILoc.x, paddleAILoc.z, paddleAILoc.y);
     }
 }

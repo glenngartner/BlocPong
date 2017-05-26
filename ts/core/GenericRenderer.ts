@@ -97,13 +97,16 @@ export class GenericRenderer implements Renderer {
         // this loops every frame, over anything in the generic scene graph (generic objects)
 
         requestAnimationFrame(this.animationLoop);
+
+        // search through the list of actors
         for (let actor of this.actors){
+
+            // do this loop on the actor that is a tracker
             if (actor.isTracker){
-                console.log("Paddle2 is asking for: " + actor.trackedTargetName);
+                //place the actor object into memory (get from the actorManager object)
                 let target = this.actorManager.returnActorByName(actor.trackedTargetName);
-                console.log("The target name is: " + target.name);
-                console.log("The target's location is: (" + target.location.x + ", " + target.location.y + ", " + target.location.z + " )");
-                console.log("The tracking actor's location is: (" + actor.location.x + ", " + actor.location.y + ", " + actor.location.z + " )");
+                // if the tracker object is constrained to move along one axis, only match that single axis with
+                // tracked object
                 if (actor.trackTargetAxis == "x") {
                     actor.location.x = target.location.x;
                     console.log(actor.name + " is tracking" + target.name + "'s x axis");
