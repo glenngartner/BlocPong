@@ -29,7 +29,7 @@ export class ThreeRenderer implements RendererInstance {
 
     createCamera(){
         console.log("threejs camera is created");
-        this._camera = new Camera({x:0, y:30, z:0}, {x:-Math.PI/2, y:0, z:0});
+        this._camera = new Camera({x:0, y:40, z:0}, {x:-Math.PI/2, y:0, z:0});
     };
 
     createBackground(){};
@@ -40,7 +40,7 @@ export class ThreeRenderer implements RendererInstance {
 
         // create the game board
         let board = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(50, 25),
+            new THREE.PlaneBufferGeometry(42, 20),
             new THREE.MeshStandardMaterial(
                 {
                     color:"white",

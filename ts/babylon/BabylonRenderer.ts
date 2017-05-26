@@ -31,7 +31,7 @@ export class BabylonRenderer implements RendererInstance {
 
     createCamera() {
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
-        this._camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 20, new BABYLON.Vector3(0, 0, 0), this._scene);
+        this._camera = new BABYLON.ArcRotateCamera('camera', 0, 0, 30, new BABYLON.Vector3(0, 0, 0), this._scene);
 
         // target the camera to scene origin
         this._camera.setTarget(BABYLON.Vector3.Zero());
