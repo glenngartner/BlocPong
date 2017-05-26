@@ -20,7 +20,7 @@ export class PhysicsWorld {
         this.createPlane();
         this.createCollisionObjects();
 
-        this.world.solver.iterations = 3;
+        this.world.solver.iterations = 5;
 
         this.simLoop();
     }
@@ -33,7 +33,7 @@ export class PhysicsWorld {
             shape: sphereShape
         });
         PhysicsWorld.sphere.position.set(actor.location.x, actor.location.z, actor.location.y);
-        PhysicsWorld.sphere.velocity.set(0, speedMult, 0);
+        PhysicsWorld.sphere.velocity.set(2, speedMult, 0);
         this.world.addBody(PhysicsWorld.sphere);
     }
 
@@ -64,10 +64,6 @@ export class PhysicsWorld {
                 this.createSphere(actor)
             }
         }
-        // let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
-        // this.paddle = new CANNON.Body({mass: 0, shape: paddleShape});
-        // this.paddle.position.set(0, 10, .5);
-        // this.world.addBody(this.paddle);
     }
 
     createPlane() {

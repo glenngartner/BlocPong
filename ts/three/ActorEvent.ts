@@ -139,9 +139,20 @@ export class ActorEvent implements ActorEventInterface {
         // babylon actor creation method, so they don't have the generic location property
         if (genericActor.location) {
 
-            genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.z;
-            genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
-            genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.x;
+            if (genericActor.location) {
+
+                if (genericActor.constrainToAxis == "x") {
+                    genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.z;
+                } else if (genericActor.constrainToAxis == "y") {
+                    genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
+                } else if (genericActor.constrainToAxis == "z") {
+                    genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.x;
+                } else if (genericActor.constrainToAxis == "") {
+                    genericActor.location.x = this.mouseOver3DPoint.z - this.deltaPosition.z;
+                    genericActor.location.y = this.mouseOver3DPoint.y - this.deltaPosition.y;
+                    genericActor.location.z = this.mouseOver3DPoint.x - this.deltaPosition.x;
+                }
+            }
         }
     }
 

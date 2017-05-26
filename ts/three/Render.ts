@@ -52,27 +52,18 @@ export class Render extends THREE.WebGLRenderer {
         meshToRemoveHighlight.getObjectByName("outline").visible = false;
     };
 
-    startDragging = (actor: Actor) => {
-        this._scene.getObjectByName(actor.name).position.z = actor.location.x;
-    }
-
     updateMeshPosition = (actor: Actor) => {
-        if (actor.constrainToAxis == "") {
 
-            this._scene.getObjectByName(actor.name).position.x = actor.location.z;
-            this._scene.getObjectByName(actor.name).position.y = actor.location.y;
-            this._scene.getObjectByName(actor.name).position.z = actor.location.x;
-        }
-    }
-
-    stopDragging = (actor: Actor) => {
+        this._scene.getObjectByName(actor.name).position.x = actor.location.z;
+        this._scene.getObjectByName(actor.name).position.y = actor.location.y;
+        this._scene.getObjectByName(actor.name).position.z = actor.location.x;
     }
 
     animate = () => {
         requestAnimationFrame(this.animate);
         this.render(this._scene, this.camera);
         this.checkActorState("selected", true, this.highlightActor, this.removeHighlight);
-        this.checkActorState("isDragging", true, this.startDragging);
+        this.checkActorState("isDragging", true, this.updateMeshPosition);
         this.checkActorState("isRigidBody", true, this.updateMeshPosition);
     }
 }
