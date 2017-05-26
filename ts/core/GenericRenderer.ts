@@ -94,25 +94,26 @@ export class GenericRenderer implements Renderer {
     };
 
     animationLoop=()=>{
-        // this loop sniffs for generic or core game things, renderer framework agnostic,
-        // like should objects track other objects, etc
+        // this loops every frame, over anything in the generic scene graph (generic objects)
 
-        // requestAnimationFrame(this.animationLoop);
-        // for (let actor of this.actors){
-        //     if (actor.isTracker){
-        //         console.log("Paddle2 is asking for: " + actor.trackedTargetName);
-        //         let target = this.actorManager.returnActorByName(actor.trackedTargetName);
-        //         // console.log("The target name is: " + target.name);
-        //         if (actor.trackTargetAxis == "x") {
-        //             actor.location.x = target.location.x;
-        //             console.log(actor.name + " is tracking" + target.name + "'s x axis");
-        //         } else if (actor.trackTargetAxis == "y") {
-        //             actor.location.y = target.location.y;
-        //         } else if (actor.trackTargetAxis == "z"){
-        //             actor.location.z = target.location.z;
-        //         }
-        //     }
-        // }
+        requestAnimationFrame(this.animationLoop);
+        for (let actor of this.actors){
+            if (actor.isTracker){
+                console.log("Paddle2 is asking for: " + actor.trackedTargetName);
+                let target = this.actorManager.returnActorByName(actor.trackedTargetName);
+                console.log("The target name is: " + target.name);
+                console.log("The target's location is: (" + target.location.x + ", " + target.location.y + ", " + target.location.z + " )");
+                console.log("The tracking actor's location is: (" + actor.location.x + ", " + actor.location.y + ", " + actor.location.z + " )");
+                if (actor.trackTargetAxis == "x") {
+                    actor.location.x = target.location.x;
+                    console.log(actor.name + " is tracking" + target.name + "'s x axis");
+                } else if (actor.trackTargetAxis == "y") {
+                    actor.location.y = target.location.y;
+                } else if (actor.trackTargetAxis == "z"){
+                    actor.location.z = target.location.z;
+                }
+            }
+        }
     }
 
 }
