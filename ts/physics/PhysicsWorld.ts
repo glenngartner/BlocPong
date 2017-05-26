@@ -7,10 +7,13 @@ import {Actor} from "../interfaces";
 export class PhysicsWorld {
 
     world: CANNON.World;
-    public static sphere: CANNON.Body;
+    sphere: CANNON.Body;
     paddle: CANNON.Body;
     ground: CANNON.Body;
     timeStep: number = 1.0 / 60.0;
+    linearDamping: number = 0;
+    angularDamping: number = 0;
+    angularVelocity: number = 10;
 
     constructor(private actorManager: ActorManager) {
         this.world = new CANNON.World();
@@ -26,23 +29,25 @@ export class PhysicsWorld {
     }
 
     createSphere(actor: Actor) {
-        let mass = actor.mass, radius = actor.scale.x / 2, speedMult = 10;
+        let mass = actor.mass, radius = actor.scale.x / 2, speedMult = 15;
         let sphereShape = new CANNON.Sphere(radius);
-        PhysicsWorld.sphere = new CANNON.Body({
+        this.sphere = new CANNON.Body({
             mass: mass,
-            shape: sphereShape
+            shape: sphereShape,
+            linearDamping: this.linearDamping,
+            angularDamping: this.angularDamping
         });
-        PhysicsWorld.sphere.position.set(actor.location.x, actor.location.z, actor.location.y);
-        PhysicsWorld.sphere.velocity.set(2, speedMult, 0);
-        this.world.addBody(PhysicsWorld.sphere);
+        this.sphere.position.set(actor.location.x, actor.location.z, actor.location.y);
+        this.sphere.velocity.set(2, speedMult, 0);
+        this.world.addBody(this.sphere);
     }
 
     createBox(actor: Actor) {
         if (actor.name == "paddle1") {
             this.createPaddle();
         } else {
-            let boxShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x/2, actor.scale.z, actor.scale.y));
-            let boxBody = new CANNON.Body({mass: actor.mass, shape: boxShape});
+            let boxShape = new CANNON.Box(new CANNON.Vec3(actor.scale.x / 2, actor.scale.z, actor.scale.y));
+            let boxBody = new CANNON.Body({mass: actor.mass, shape: boxShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
             boxBody.position.set(actor.location.x, actor.location.z, actor.location.y);
             this.world.addBody(boxBody);
         }
@@ -50,7 +55,7 @@ export class PhysicsWorld {
 
     createPaddle() {
         let paddleShape = new CANNON.Box(new CANNON.Vec3(3, .5, .5));
-        this.paddle = new CANNON.Body({mass: 0, shape: paddleShape});
+        this.paddle = new CANNON.Body({mass: 0, shape: paddleShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
         this.paddle.position.set(0, 10, .5);
         this.world.addBody(this.paddle);
     }
@@ -68,23 +73,41 @@ export class PhysicsWorld {
 
     createPlane() {
         let groundShape = new CANNON.Plane();
-        this.ground = new CANNON.Body({mass: 0, shape: groundShape});
+        this.ground = new CANNON.Body({mass: 0, shape: groundShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
         this.world.addBody(this.ground);
     }
 
     simLoop = () => {
         requestAnimationFrame(this.simLoop);
         this.world.step(this.timeStep);
-        if (PhysicsWorld.sphere) {
+        if (this.sphere) {
             this.actorManager.changeActorPropertyValue("ball", "location", {
-                x: PhysicsWorld.sphere.position.x,
-                y: PhysicsWorld.sphere.position.z,
-                z: PhysicsWorld.sphere.position.y
+                x: this.sphere.position.x,
+                y: this.sphere.position.z,
+                z: this.sphere.position.y
             });
         }
 
+        // check to see if a collision "contact" was made betwen rigid or static body objects
+        // this length will always be 1, since we have a ground place, and the ball is alwasy colliding with that
+        // if the length is 2, we want to know details about the second collision object
+
         if (this.world.contacts.length > 1) {
             console.log("The ball collided with a non-ground object");
+            console.log("Collision impact velocity along normal: " + this.world.contacts[1].getImpactVelocityAlongNormal());
+            console.log("The contact normal is" + this.world.contacts[1].ni);
+
+            this.sphere.velocity = this.world.contacts[1].ni.mult(-15);
+            // this.sphere.angularVelocity = this.sphere.angularVelocity.mult(-100);
+
+            // make the ball bounce fast, in it's opposite direction
+            // we're diretly setting the velocity to the inverse of the contact point's location
+            // if (this.world.contacts[1].ni == new CANNON.Vec3(1, 0, 0)) {
+            //     this.sphere.velocity = this.world.contacts[1].ni.mult(-15,);
+            //     this.sphere.velocity.vadd(new CANNON.Vec3(0, 0, 5));
+            // } else {
+            //     this.sphere.velocity = this.world.contacts[1].ni.mult(-15,);
+            // }
         }
 
         let paddle1Loc = this.actorManager.actorPropertyValue("paddle1", "location");
