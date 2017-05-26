@@ -12,16 +12,18 @@ export class PhysicsWorld {
     aiPaddle: CANNON.Body;
     ground: CANNON.Body;
     timeStep: number = 1.0 / 60.0;
-    linearDamping: number = 0;
-    angularDamping: number = 0;
+    linearDamping: number = .01;
+    angularDamping: number = .01;
     angularVelocity: number = 10;
+    randomBounceMultiplier: number = 15;
+    ballVelocity: number = -20;
 
     constructor(private actorManager: ActorManager) {
         this.world = new CANNON.World();
         this.world.gravity.set(0, 0, -9.82);
         this.world.broadphase = new CANNON.NaiveBroadphase();
 
-        this.createPlane();
+        this.createPlane(1);
         this.createCollisionObjects();
 
         this.world.solver.iterations = 5;
@@ -85,10 +87,12 @@ export class PhysicsWorld {
         }
     }
 
-    createPlane() {
+    createPlane(height: number, rotation: number =0) {
         let groundShape = new CANNON.Plane();
-        this.ground = new CANNON.Body({mass: 0, shape: groundShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
-        this.world.addBody(this.ground);
+        let groundBody = new CANNON.Body({mass: 0, shape: groundShape, linearDamping: this.linearDamping, angularDamping: this.angularDamping});
+        groundBody.position.set(0, height, 0);
+        // groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), rotation);
+        this.world.addBody(groundBody);
     }
 
     simLoop = () => {
@@ -107,21 +111,11 @@ export class PhysicsWorld {
         // if the length is 2, we want to know details about the second collision object
 
         if (this.world.contacts.length > 1) {
-            console.log("The ball collided with a non-ground object");
-            console.log("Collision impact velocity along normal: " + this.world.contacts[1].getImpactVelocityAlongNormal());
-            console.log("The contact normal is" + this.world.contacts[1].ni);
 
-            this.sphere.velocity = this.world.contacts[1].ni.mult(-15);
-            // this.sphere.angularVelocity = this.sphere.angularVelocity.mult(-100);
+            // this adds a fake velocity to the ball when it impacts an object.
+            // for now, this velocity is the inverse of the impact vector (location where both objects touched)
+            this.sphere.velocity = this.world.contacts[1].ni.mult(this.ballVelocity).vadd(new CANNON.Vec3(Math.random()*this.randomBounceMultiplier, Math.random()*this.randomBounceMultiplier, Math.random()*this.randomBounceMultiplier));
 
-            // make the ball bounce fast, in it's opposite direction
-            // we're diretly setting the velocity to the inverse of the contact point's location
-            // if (this.world.contacts[1].ni == new CANNON.Vec3(1, 0, 0)) {
-            //     this.sphere.velocity = this.world.contacts[1].ni.mult(-15,);
-            //     this.sphere.velocity.vadd(new CANNON.Vec3(0, 0, 5));
-            // } else {
-            //     this.sphere.velocity = this.world.contacts[1].ni.mult(-15,);
-            // }
         }
 
         // get the locations of the generic (headless) objects in the generic scene. as their positions change,

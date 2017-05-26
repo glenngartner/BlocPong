@@ -48,7 +48,7 @@ export class ActorManager {
             if (actor.name == name){
                 return actor;
             } else {
-                console.log("you've requested an actor that doesn't exist");
+                // console.log("you've requested an actor that doesn't exist");
             }
         }
     }

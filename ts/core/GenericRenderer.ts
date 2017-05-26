@@ -101,7 +101,7 @@ export class GenericRenderer implements Renderer {
         // search through the list of actors
         for (let actor of this.actors){
 
-            // do this loop on the actor that is a tracker
+            // do this on the actor that is a tracker (ie: it's tracking the behavior of another object)
             if (actor.isTracker){
                 //place the actor object into memory (get from the actorManager object)
                 let target = this.actorManager.returnActorByName(actor.trackedTargetName);
@@ -109,7 +109,6 @@ export class GenericRenderer implements Renderer {
                 // tracked object
                 if (actor.trackTargetAxis == "x") {
                     actor.location.x = target.location.x;
-                    console.log(actor.name + " is tracking" + target.name + "'s x axis");
                 } else if (actor.trackTargetAxis == "y") {
                     actor.location.y = target.location.y;
                 } else if (actor.trackTargetAxis == "z"){
