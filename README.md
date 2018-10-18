@@ -30,6 +30,10 @@ To Run
 ```bash
 git clone https://github.com/glenngartner/BlocPong.git
 ```
+- run npm install to pull the project dependencies
+```bash
+npm install
+```
 - then, open _index.html_ in your favorite browser
 
 
